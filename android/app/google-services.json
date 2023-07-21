@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "790045969553",
+    "project_id": "ecom-11288",
+    "storage_bucket": "ecom-11288.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790045969553:android:9a96353413fe6e333f8330",
+        "android_client_info": {
+          "package_name": "com.userecom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790045969553-banv943iln38bmigo7r2dtje0ojb95o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWYLiqWvnmjy-szT9nPekt2TouS5GiD2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790045969553-banv943iln38bmigo7r2dtje0ojb95o9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790045969553:android:54ee9326216f05773f8330",
+        "android_client_info": {
+          "package_name": "com.vendorecom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790045969553-banv943iln38bmigo7r2dtje0ojb95o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWYLiqWvnmjy-szT9nPekt2TouS5GiD2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790045969553-banv943iln38bmigo7r2dtje0ojb95o9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
