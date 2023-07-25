@@ -23,7 +23,7 @@ const AuthenticationModal = props => {
             title="Cancel"
             width="w-64"
             handlePress={onCancel}
-            color="bg-gray-300"
+            color="bg-gray-500"
           />
         </View>
       </View>

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard';
-
+import {useIsFocused} from '@react-navigation/native';
 
 const Home = () => {
   const [productList, setProductList] = useState([]);
@@ -19,21 +19,24 @@ const Home = () => {
       });
   };
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [isFocused]);
 
   const renderProductCard = item => (
     <ProductCard
       item={item}
-      // refreshFlatlist={refreshFlatlist}
-      // setRefreshFlatList={setRefreshFlatList}
+      refreshFlatlist={refreshFlatlist}
+      setRefreshFlatList={setRefreshFlatList}
+      getProducts={getProducts}
     />
   );
 
   return (
     <>
-      <View className="flex-1">
+      <View className="flex-1 mt-4">
         <FlatList
           data={productList}
           renderItem={({item}) => renderProductCard(item)}
@@ -41,7 +44,6 @@ const Home = () => {
           extraData={refreshFlatlist}
         />
       </View>
- 
     </>
   );
 };

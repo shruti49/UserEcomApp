@@ -1,7 +1,6 @@
+import {Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
 import {Icon} from 'react-native-eva-icons';
-
 import Home from '../tabs/Home';
 import Search from '../tabs/Search';
 import Wishlist from '../tabs/Wishlist';
@@ -17,13 +16,12 @@ const BottomTabNavigator = () => {
         tabBarStyle: {
           paddingBottom: 5,
           paddingTop: 5,
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          height: 80,
+          height: 76,
         },
-        tabBarShowLabel: false,
+        tabBarLabelStyle: {fontSize: 16},
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
+          size = 32;
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
@@ -39,17 +37,43 @@ const BottomTabNavigator = () => {
 
           // You can return any component that you like here!
           return (
-            <Icon name={iconName} width={size} height={size} fill={color} />
+            <>
+              {route.name === 'cart' && (
+                <Text
+                  style={{
+                    position: 'absolute',
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    bottom: 26,
+                    color: '#000000',
+                  }}>
+                  2
+                </Text>
+              )}
+              <Icon name={iconName} width={size} height={size} fill={color} />
+            </>
           );
         },
-        tabBarActiveTintColor: 'purple',
+        tabBarActiveTintColor: 'rgb(107 33 168)',
         tabBarInactiveTintColor: 'black',
       })}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="search" component={Search} />
-      <Tab.Screen name="cart" component={Cart} />
-      <Tab.Screen name="wishlist" component={Wishlist} />
-      <Tab.Screen name="profile" component={Profile} />
+      <Tab.Screen
+        name="search"
+        component={Search}
+        options={{title: 'Search'}}
+      />
+      <Tab.Screen name="cart" component={Cart} options={{title: 'Cart'}} />
+      <Tab.Screen
+        name="wishlist"
+        component={Wishlist}
+        options={{title: 'Wishlist'}}
+      />
+      <Tab.Screen
+        name="profile"
+        component={Profile}
+        options={{title: 'Profile'}}
+      />
     </Tab.Navigator>
   );
 };
