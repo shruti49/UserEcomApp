@@ -17,7 +17,6 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   const {cartLength} = useContext(CartContext);
 
-
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({

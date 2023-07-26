@@ -18,7 +18,7 @@ const Cart = () => {
     const customerId = await AsyncStorage.getItem('customerId');
     firestore()
       .collection('cart')
-      .where('addedBy', '==', customerId)
+      .where('userId', '==', customerId)
       .get()
       .then(snapshot => {
         setCartItemList(snapshot.docs);

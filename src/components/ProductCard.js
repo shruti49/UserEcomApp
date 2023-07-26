@@ -49,24 +49,20 @@ const ProductCard = props => {
 
   //check user is logged in or not
   const checkUserAuthentication = async (item, type) => {
-    //console.log(type);
     const customerId = await AsyncStorage.getItem('customerId');
     //if not logged in got to login page
     if (customerId === null) {
-      //console.log(customerId);
       setIsVisible(true);
     } else {
-      //dispatching an action
       const itemId = uuid.v4();
       if (type === 'bag') {
         firestore()
           .collection('cart')
-          .where('addedBy', '==', customerId)
+          .where('userId', '==', customerId)
           .get()
           .then(snapshot => {
             //if user has added items in cart
             if (snapshot.docs.length > 0) {
-              console.log(snapshot.docs.length);
               //looping over all the items added by the user
               snapshot.docs.map(cartItem => {
                 const productId = cartItem._data.itemData.id;

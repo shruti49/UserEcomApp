@@ -11,11 +11,15 @@ export const CartProvider = ({children}) => {
   const fetchCartLength = customerId => {
     firestore()
       .collection('cart')
-      .where('addedBy', '==', customerId)
+      .where('userId', '==', customerId)
       .get()
       .then(snapshot => {
         //if user has added items in cart
-        setCartLength(snapshot.docs.length);
+        let totalItemLength = 0;
+        for (let i = 0; i < snapshot.docs.length; i++) {
+          totalItemLength = totalItemLength + snapshot.docs[i]._data.quantity;
+        }
+        setCartLength(totalItemLength);
       })
       .catch(err => console.log(err));
   };
@@ -26,7 +30,7 @@ export const CartProvider = ({children}) => {
       setLoggedInUserId(customerId);
       fetchCartLength(customerId);
     })();
-  }, []);
+  }, [cartLength]);
 
   //const dispatch = useDispatch();
   const addNewItemInCart = (item, itemId, customerId) => {
@@ -36,7 +40,7 @@ export const CartProvider = ({children}) => {
       .set({
         itemId: itemId,
         itemData: {...item._data},
-        addedBy: customerId,
+        userId: customerId,
         quantity: 1,
       })
       .then(snapshot => {
@@ -63,7 +67,7 @@ export const CartProvider = ({children}) => {
         .doc(item._data.itemId)
         .update({quantity: item._data.quantity + 1})
         .then(() => {
-          fetchCartLength(loggedInUserId);
+          fetchCartLength(item._data.userId);
         })
         .catch(err => console.log(err));
     }
@@ -76,8 +80,7 @@ export const CartProvider = ({children}) => {
         .doc(item._data.itemId)
         .update({quantity: item._data.quantity - 1})
         .then(() => {
-          console.log(item._data);
-          fetchCartLength(loggedInUserId);
+          fetchCartLength(item._data.userId);
         })
         .catch(err => console.log(err));
     }
