@@ -1,6 +1,11 @@
-import {Text, View} from 'react-native';
+import {useEffect, useContext, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon} from 'react-native-eva-icons';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {CartItemContext} from '../context/CartItemContext';
+import Checkout from '../screens/Checkout';
 import Home from '../tabs/Home';
 import Search from '../tabs/Search';
 import Wishlist from '../tabs/Wishlist';
@@ -10,6 +15,9 @@ import Cart from '../tabs/Cart';
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const {cartLength} = useContext(CartItemContext);
+  // const [loggedInUserId, setLoggedInUserId] = useState();
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -25,33 +33,19 @@ const BottomTabNavigator = () => {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'search') {
+          } else if (route.name === 'Search') {
             iconName = focused ? 'search' : 'search-outline';
-          } else if (route.name === 'cart') {
+          } else if (route.name === 'Cart') {
             iconName = focused ? 'shopping-cart' : 'shopping-cart-outline';
-          } else if (route.name === 'wishlist') {
+          } else if (route.name === 'Wishlist') {
             iconName = focused ? 'heart' : 'heart-outline';
-          } else if (route.name === 'profile') {
+          } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           }
 
           // You can return any component that you like here!
           return (
-            <>
-              {route.name === 'cart' && (
-                <Text
-                  style={{
-                    position: 'absolute',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    bottom: 26,
-                    color: '#000000',
-                  }}>
-                  2
-                </Text>
-              )}
-              <Icon name={iconName} width={size} height={size} fill={color} />
-            </>
+            <Icon name={iconName} width={size} height={size} fill={color} />
           );
         },
         tabBarActiveTintColor: 'rgb(107 33 168)',
@@ -59,18 +53,22 @@ const BottomTabNavigator = () => {
       })}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen
-        name="search"
+        name="Search"
         component={Search}
         options={{title: 'Search'}}
       />
-      <Tab.Screen name="cart" component={Cart} options={{title: 'Cart'}} />
       <Tab.Screen
-        name="wishlist"
+        name="Cart"
+        component={Cart}
+        options={cartLength > 0 && {tabBarBadge: cartLength}}
+      />
+      <Tab.Screen
+        name="Wishlist"
         component={Wishlist}
         options={{title: 'Wishlist'}}
       />
       <Tab.Screen
-        name="profile"
+        name="Profile"
         component={Profile}
         options={{title: 'Profile'}}
       />

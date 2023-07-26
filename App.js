@@ -2,16 +2,15 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
 import {CartItemProvider} from './src/context/CartItemContext';
-import {Provider} from 'react-redux';
-import appStore from './src/reduxStore/appStore';
+import {AuthProvider} from './src/context/AuthContext';
 
 const App = () => {
   return (
-    <Provider store={appStore}>
+    <AuthProvider>
       <CartItemProvider>
         <AppNavigator />
       </CartItemProvider>
-    </Provider>
+    </AuthProvider>
   );
 };
 

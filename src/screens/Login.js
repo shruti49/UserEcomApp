@@ -1,15 +1,12 @@
-import React, {useState} from 'react';
-import {View, Text, Image, Alert} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {View, Text, Image, Alert, TouchableOpacity} from 'react-native';
 import CustomInputText from '../components/CustomInputText';
 import CustomButton from '../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../components/Loader';
+import {AuthContext} from '../context/AuthContext';
 
-const Login = () => {
-  const navigation = useNavigation();
+const Login = ({navigation}) => {
+  const {loginUser, loaderVisible} = useContext(AuthContext);
 
   const defaultFields = {
     email: '',
@@ -17,7 +14,6 @@ const Login = () => {
   };
 
   const [formFields, setFormFields] = useState(defaultFields);
-  const [isVisible, setIsVisible] = useState(false);
 
   const {email, password} = formFields;
 
@@ -31,33 +27,6 @@ const Login = () => {
     }
 
     return true;
-  };
-
-  const loginUser = () => {
-    firestore()
-      .collection('users')
-      .where('email', '==', email)
-      .get()
-      .then(snapshot => {
-        setIsVisible(false);
-        if (snapshot.docs.length !== 0) {
-          const userObj = snapshot.docs[0]._data;
-          if (userObj.password === password) {
-            goToNextScreen(userObj);
-          }
-        }
-      })
-      .catch(err => {
-        setIsVisible(false);
-        console.log(err);
-      });
-  };
-
-  const goToNextScreen = async data => {
-    await AsyncStorage.setItem('userId', data.userId);
-    await AsyncStorage.setItem('name', data.name);
-    await AsyncStorage.setItem('email', data.email);
-    navigation.navigate('home');
   };
 
   return (
@@ -86,22 +55,24 @@ const Login = () => {
         <CustomButton
           title="Login"
           handlePress={() => {
-            if (inputValidation()) loginUser();
-            else Alert.alert('Please fill the data correctly');
+            if (inputValidation()) {
+              loginUser(formFields);
+              navigation.navigate('Home');
+            } else Alert.alert('Please fill the data correctly');
           }}
           width="w-11/12"
           color="bg-purple-800"
         />
         <View className="items-center mt-10 flex-row">
           <Text className="text-black">Don't have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('sign-up')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Sign-Up')}>
             <Text className=" text-purple-800 font-bold focus:text-xl">
               {'  '}Create One
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-      <Loader isVisible={isVisible} />
+      <Loader isVisible={loaderVisible} />
     </View>
   );
 };

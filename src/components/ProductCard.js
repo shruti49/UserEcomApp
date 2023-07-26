@@ -17,7 +17,7 @@ const ProductCard = props => {
     decreaseItemQuantity,
     removeItemfromCart,
     updatePrice,
-    addNewItemInCart
+    addNewItemInCart,
   } = useContext(CartItemContext);
 
   const {
@@ -48,35 +48,43 @@ const ProductCard = props => {
   };
 
   //check user is logged in or not
-  const checkUserAuthentication = async item => {
-    const userId = await AsyncStorage.getItem('userId');
+  const checkUserAuthentication = async (item, type) => {
+    //console.log(type);
+    const customerId = await AsyncStorage.getItem('customerId');
     //if not logged in got to login page
-    if (userId === null) setIsVisible(true);
-    const itemId = uuid.v4();
-
-    firestore()
-      .collection('cart')
-      .where('addedBy', '==', userId)
-      .get()
-      .then(snapshot => {
-        //if user has added items in cart
-        if (snapshot.docs.length > 0) {
-          //looping over all the items added by the user
-          snapshot.docs.map(cartItem => {
-            const productId = cartItem._data.itemData.id;
-            //if that item exists increase the quantity
-            if (productId === item._data.id) {
-              increaseItemQuantity(cartItem);
+    if (customerId === null) {
+      //console.log(customerId);
+      setIsVisible(true);
+    } else {
+      //dispatching an action
+      const itemId = uuid.v4();
+      if (type === 'bag') {
+        firestore()
+          .collection('cart')
+          .where('addedBy', '==', customerId)
+          .get()
+          .then(snapshot => {
+            //if user has added items in cart
+            if (snapshot.docs.length > 0) {
+              console.log(snapshot.docs.length);
+              //looping over all the items added by the user
+              snapshot.docs.map(cartItem => {
+                const productId = cartItem._data.itemData.id;
+                //if that item exists increase the quantity
+                if (productId === item._data.id) {
+                  increaseItemQuantity(cartItem);
+                } else {
+                  //user has not added anything
+                  addNewItemInCart(item, itemId, customerId);
+                }
+              });
             } else {
               //user has not added anything
-              addNewItemInCart(item, itemId, userId);
+              addNewItemInCart(item, itemId, customerId);
             }
           });
-        } else {
-          //user has not added anything
-          addNewItemInCart(item, itemId, userId);
-        }
-      });
+      }
+    }
   };
 
   return (
@@ -117,7 +125,8 @@ const ProductCard = props => {
             </TouchableOpacity>
           ) : (
             <>
-              <TouchableOpacity onPress={() => checkUserAuthentication(item)}>
+              <TouchableOpacity
+                onPress={() => checkUserAuthentication(item, 'wishlist')}>
                 <Icon
                   name="heart-outline"
                   width={24}
@@ -126,7 +135,7 @@ const ProductCard = props => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => checkUserAuthentication(item)}
+                onPress={() => checkUserAuthentication(item, 'bag')}
                 className="p-2 content-center items-center self-center rounded-lg bg-purple-800">
                 <Text className="text-white">Add to Bag</Text>
               </TouchableOpacity>
@@ -170,7 +179,7 @@ const ProductCard = props => {
         onCancel={() => setIsVisible(false)}
         onHandleLogin={() => {
           setIsVisible(false);
-          navigation.navigate('login');
+          navigation.navigate('Login');
         }}
       />
     </View>

@@ -15,10 +15,10 @@ const Cart = () => {
   const [refreshFlatlist, setRefreshFlatList] = useState(false);
 
   const getCartItems = async () => {
-    const userId = await AsyncStorage.getItem('userId');
+    const customerId = await AsyncStorage.getItem('customerId');
     firestore()
       .collection('cart')
-      .where('addedBy', '==', userId)
+      .where('addedBy', '==', customerId)
       .get()
       .then(snapshot => {
         setCartItemList(snapshot.docs);

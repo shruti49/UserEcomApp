@@ -1,26 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
   Image,
   TouchableOpacity,
   Alert,
-  Animated,
-  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
 import {Icon} from 'react-native-eva-icons';
-import {useNavigation} from '@react-navigation/native';
 import CustomInputText from '../components/CustomInputText';
 import CustomButton from '../components/CustomButton';
-
-import firestore from '@react-native-firebase/firestore';
-import uuid from 'react-native-uuid';
 import Loader from '../components/Loader';
+import {AuthContext} from '../context/AuthContext';
 
-const SignUp = () => {
-  const navigation = useNavigation();
+const SignUp = ({navigation}) => {
+
+  const {registerUser, loaderVisible} = useContext(AuthContext);
 
   const defaultFields = {
     displayName: '',
@@ -31,7 +27,6 @@ const SignUp = () => {
   };
 
   const [formFields, setFormFields] = useState(defaultFields);
-  const [isVisible, setIsVisible] = useState(false);
 
   const {displayName, email, phoneNo, password, confirmPassword} = formFields;
 
@@ -55,30 +50,6 @@ const SignUp = () => {
     return true;
   };
 
-  const registerUser = () => {
-    setIsVisible(true);
-    const id = uuid.v4();
-    firestore()
-      .collection('users')
-      .doc(id)
-      .set({
-        name: displayName,
-        email: email,
-        phoneNo: phoneNo,
-        userId: id,
-        password: password,
-      })
-      .then(res => {
-        setIsVisible(false);
-        console.log(res);
-        navigation.navigate('login');
-      })
-      .catch(err => {
-        setIsVisible(false);
-        console.log(err);
-      });
-  };
-
   return (
     <View className="flex-1 items-center">
       <Image
@@ -86,7 +57,7 @@ const SignUp = () => {
         className="w-full h-56"
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate('login')}
+        onPress={() => navigation.navigate('Login')}
         className="w-10 h-10 rounded-lg bg-white absolute top-5 left-5  justify-center items-center"
         style={{elevation: 2}}>
         <Icon name="arrow-back" width={28} height={28} color={'black'} />
@@ -124,7 +95,6 @@ const SignUp = () => {
             <CustomInputText
               placeholder="Enter Confirm Password"
               value={confirmPassword}
-              textType="password"
               handleChange={val => handleFormFields(val, 'confirmPassword')}
             />
             <CustomButton
@@ -132,14 +102,18 @@ const SignUp = () => {
               title="Sign Up"
               color="bg-purple-800"
               handlePress={() => {
-                if (inputValidation()) registerUser();
-                else Alert.alert('Please fill the data correctly');
+                if (inputValidation()) {
+                  registerUser(formFields);
+                  navigation.navigate('Login');
+                } else {
+                  Alert.alert('Please fill the data correctly');
+                }
               }}
             />
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
-      <Loader isVisible={isVisible} />
+      <Loader isVisible={loaderVisible} />
     </View>
   );
 };
