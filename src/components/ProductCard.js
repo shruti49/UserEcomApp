@@ -6,7 +6,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import AuthenticationModal from '../components/AuthenticationModal';
-import {CartItemContext} from '../context/CartItemContext';
+import {CartContext} from '../context/CartContext';
 import uuid from 'react-native-uuid';
 
 const ProductCard = props => {
@@ -18,7 +18,7 @@ const ProductCard = props => {
     removeItemfromCart,
     updatePrice,
     addNewItemInCart,
-  } = useContext(CartItemContext);
+  } = useContext(CartContext);
 
   const {
     item,

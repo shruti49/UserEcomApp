@@ -2,9 +2,9 @@ import {createContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const CartItemContext = createContext();
+export const CartContext = createContext();
 
-export const CartItemProvider = ({children}) => {
+export const CartProvider = ({children}) => {
   const [cartLength, setCartLength] = useState(0);
   const [loggedInUserId, setLoggedInUserId] = useState();
 
@@ -15,9 +15,7 @@ export const CartItemProvider = ({children}) => {
       .get()
       .then(snapshot => {
         //if user has added items in cart
-        if (snapshot.docs.length > 0) {
-          setCartLength(snapshot.docs.length);
-        }
+        setCartLength(snapshot.docs.length);
       })
       .catch(err => console.log(err));
   };
@@ -53,8 +51,8 @@ export const CartItemProvider = ({children}) => {
       .doc(id)
       .delete()
       .then(() => {
-        fetchCartLength(loggedInUserId);
         console.log('Product deleted!');
+        fetchCartLength(loggedInUserId);
       });
   };
 
@@ -103,7 +101,7 @@ export const CartItemProvider = ({children}) => {
   };
 
   return (
-    <CartItemContext.Provider
+    <CartContext.Provider
       value={{
         getTotalCartAmount,
         increaseItemQuantity,
@@ -114,6 +112,6 @@ export const CartItemProvider = ({children}) => {
         cartLength,
       }}>
       {children}
-    </CartItemContext.Provider>
+    </CartContext.Provider>
   );
 };

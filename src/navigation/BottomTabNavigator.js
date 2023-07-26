@@ -4,7 +4,7 @@ import {Icon} from 'react-native-eva-icons';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {CartItemContext} from '../context/CartItemContext';
+import {CartContext} from '../context/CartContext';
 import Checkout from '../screens/Checkout';
 import Home from '../tabs/Home';
 import Search from '../tabs/Search';
@@ -15,8 +15,8 @@ import Cart from '../tabs/Cart';
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
-  const {cartLength} = useContext(CartItemContext);
-  // const [loggedInUserId, setLoggedInUserId] = useState();
+  const {cartLength} = useContext(CartContext);
+
 
   return (
     <Tab.Navigator

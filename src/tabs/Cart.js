@@ -5,10 +5,10 @@ import ProductCard from '../components/ProductCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import CheckoutCard from '../components/CheckoutCard';
-import {CartItemContext} from '../context/CartItemContext';
+import {CartContext} from '../context/CartContext';
 
 const Cart = () => {
-  const {getTotalCartAmount} = useContext(CartItemContext);
+  const {getTotalCartAmount} = useContext(CartContext);
   const navigation = useNavigation();
 
   const [cartItemList, setCartItemList] = useState([]);
