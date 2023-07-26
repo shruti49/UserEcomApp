@@ -7,7 +7,7 @@ import Splash from '../screens/Splash';
 import BottomTabNavigator from './BottomTabNavigator';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
-
+import Checkout from '../screens/Checkout';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +24,11 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Sign-Up" component={SignUp} />
         <Stack.Screen name="home" component={BottomTabNavigator} />
+        <Stack.Screen
+          name="Checkout"
+          component={Checkout}
+          options={{headerShown: true}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

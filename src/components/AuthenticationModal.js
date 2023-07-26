@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, Modal} from 'react-native';
 import CustomButton from './CustomButton';
 

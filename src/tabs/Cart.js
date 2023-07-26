@@ -1,33 +1,26 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {View, FlatList, Text, TouchableOpacity} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import {useIsFocused} from '@react-navigation/native';
+
 import ProductCard from '../components/ProductCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
-import CheckoutCard from '../components/CheckoutCard';
+import TotalPriceCard from '../components/TotalPriceCard';
+
 import {CartContext} from '../context/CartContext';
+import {AuthContext} from '../context/AuthContext';
 
-const Cart = () => {
-  const {getTotalCartAmount} = useContext(CartContext);
-  const navigation = useNavigation();
+const Cart = ({navigation}) => {
+  
+  const {getTotalCartAmount, fetchCartItems, cartItemList} = useContext(CartContext);
 
-  const [cartItemList, setCartItemList] = useState([]);
+  const {userData} = useContext(AuthContext);
+
   const [refreshFlatlist, setRefreshFlatList] = useState(false);
-
-  const getCartItems = async () => {
-    const customerId = await AsyncStorage.getItem('customerId');
-    firestore()
-      .collection('cart')
-      .where('userId', '==', customerId)
-      .get()
-      .then(snapshot => {
-        setCartItemList(snapshot.docs);
-      });
-  };
-
+  
   const isFocused = useIsFocused();
+
   useEffect(() => {
-    getCartItems();
+    const customerId = userData.id;
+    fetchCartItems(customerId);
   }, [isFocused, refreshFlatlist]);
 
   const renderProductCard = item => (
@@ -36,7 +29,6 @@ const Cart = () => {
       screenName="cart"
       refreshFlatlist={refreshFlatlist}
       setRefreshFlatList={setRefreshFlatList}
-      getCartItems={getCartItems}
     />
   );
 
@@ -67,7 +59,7 @@ const Cart = () => {
               extraData={refreshFlatlist}
             />
           </View>
-          <CheckoutCard totalAmount={getTotalCartAmount(cartItemList)} />
+          <TotalPriceCard totalAmount={getTotalCartAmount(cartItemList)} />
         </>
       )}
     </>

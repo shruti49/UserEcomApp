@@ -3,10 +3,10 @@ import {View, Text, Image} from 'react-native';
 import {Icon} from 'react-native-eva-icons';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import AuthenticationModal from '../components/AuthenticationModal';
 import {CartContext} from '../context/CartContext';
+import {AuthContext} from '../context/AuthContext';
 import uuid from 'react-native-uuid';
 
 const ProductCard = props => {
@@ -18,14 +18,16 @@ const ProductCard = props => {
     removeItemfromCart,
     updatePrice,
     addNewItemInCart,
+    fetchCartItems,
   } = useContext(CartContext);
+
+  const {userData} = useContext(AuthContext);
 
   const {
     item,
     screenName,
     refreshFlatlist,
     setRefreshFlatList,
-    getCartItems,
     getProducts,
   } = props;
 
@@ -43,13 +45,13 @@ const ProductCard = props => {
 
   const updateFlatList = () => {
     setRefreshFlatList(!refreshFlatlist);
-    if (screenName === 'cart') getCartItems();
+    if (screenName === 'cart') fetchCartItems(userData.id);
     else getProducts();
   };
 
   //check user is logged in or not
-  const checkUserAuthentication = async (item, type) => {
-    const customerId = await AsyncStorage.getItem('customerId');
+  const checkUserAuthentication = (item, type) => {
+    const customerId = userData.id;
     //if not logged in got to login page
     if (customerId === null) {
       setIsVisible(true);

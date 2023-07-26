@@ -1,4 +1,4 @@
-import {createContext, useState} from 'react';
+import {createContext, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
@@ -7,6 +7,16 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [loaderVisible, setLoaderVisible] = useState(false);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const customerId = await AsyncStorage.getItem('customerId');
+      const customerName = await AsyncStorage.getItem('customerName');
+      const customerEmail = await AsyncStorage.getItem('email');
+      setUserData({id: customerId, name: customerName, email: customerEmail});
+    })();
+  }, []);
 
   const setDataInAsyncStorage = async data => {
     await AsyncStorage.setItem('customerId', data.customerId);
@@ -73,6 +83,8 @@ export const AuthProvider = ({children}) => {
         registerUser,
         loginUser,
         logout,
+        userData,
+        setUserData,
       }}>
       {children}
     </AuthContext.Provider>

@@ -7,14 +7,16 @@ export const CartContext = createContext();
 export const CartProvider = ({children}) => {
   const [cartLength, setCartLength] = useState(0);
   const [loggedInUserId, setLoggedInUserId] = useState();
+  const [cartItemList, setCartItemList] = useState([]);
 
-  const fetchCartLength = customerId => {
+  const fetchCartItems = customerId => {
     firestore()
       .collection('cart')
       .where('userId', '==', customerId)
       .get()
       .then(snapshot => {
         //if user has added items in cart
+        setCartItemList(snapshot.docs);
         let totalItemLength = 0;
         for (let i = 0; i < snapshot.docs.length; i++) {
           totalItemLength = totalItemLength + snapshot.docs[i]._data.quantity;
@@ -28,7 +30,7 @@ export const CartProvider = ({children}) => {
     (async () => {
       const customerId = await AsyncStorage.getItem('customerId');
       setLoggedInUserId(customerId);
-      fetchCartLength(customerId);
+      fetchCartItems(customerId);
     })();
   }, [cartLength]);
 
@@ -44,7 +46,7 @@ export const CartProvider = ({children}) => {
         quantity: 1,
       })
       .then(snapshot => {
-        fetchCartLength(loggedInUserId);
+        fetchCartItems(customerId);
       })
       .catch(err => console.log(err));
   };
@@ -56,7 +58,7 @@ export const CartProvider = ({children}) => {
       .delete()
       .then(() => {
         console.log('Product deleted!');
-        fetchCartLength(loggedInUserId);
+        fetchCartItems(loggedInUserId);
       });
   };
 
@@ -67,7 +69,7 @@ export const CartProvider = ({children}) => {
         .doc(item._data.itemId)
         .update({quantity: item._data.quantity + 1})
         .then(() => {
-          fetchCartLength(item._data.userId);
+          fetchCartItems(item._data.userId);
         })
         .catch(err => console.log(err));
     }
@@ -80,7 +82,7 @@ export const CartProvider = ({children}) => {
         .doc(item._data.itemId)
         .update({quantity: item._data.quantity - 1})
         .then(() => {
-          fetchCartLength(item._data.userId);
+          fetchCartItems(item._data.userId);
         })
         .catch(err => console.log(err));
     }
@@ -113,6 +115,8 @@ export const CartProvider = ({children}) => {
         updatePrice,
         addNewItemInCart,
         cartLength,
+        fetchCartItems,
+        cartItemList,
       }}>
       {children}
     </CartContext.Provider>

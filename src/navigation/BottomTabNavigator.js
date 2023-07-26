@@ -1,11 +1,9 @@
-import {useEffect, useContext, useState} from 'react';
+import {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon} from 'react-native-eva-icons';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {CartContext} from '../context/CartContext';
-import Checkout from '../screens/Checkout';
+
 import Home from '../tabs/Home';
 import Search from '../tabs/Search';
 import Wishlist from '../tabs/Wishlist';

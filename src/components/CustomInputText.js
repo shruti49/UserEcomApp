@@ -1,5 +1,5 @@
-import {View, TextInput} from 'react-native';
 import React from 'react';
+import {View, TextInput} from 'react-native';
 
 const CustomInputText = props => {
   const {placeholder, value, handleChange, type, width, handleFocus, textType} =

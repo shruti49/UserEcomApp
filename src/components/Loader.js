@@ -1,5 +1,5 @@
-import {View, Modal, ActivityIndicator} from 'react-native';
 import React from 'react';
+import {View, Modal, ActivityIndicator} from 'react-native';
 
 const Loader = ({isVisible}) => {
   return (

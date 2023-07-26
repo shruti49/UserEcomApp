@@ -7,6 +7,7 @@ import {useIsFocused} from '@react-navigation/native';
 const Home = () => {
   const [productList, setProductList] = useState([]);
   const [refreshFlatlist, setRefreshFlatList] = useState(false);
+  const isFocused = useIsFocused();
 
   const getProducts = () => {
     firestore()
@@ -19,7 +20,6 @@ const Home = () => {
       });
   };
 
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     getProducts();
@@ -35,16 +35,14 @@ const Home = () => {
   );
 
   return (
-    <>
-      <View className="flex-1 mt-4">
-        <FlatList
-          data={productList}
-          renderItem={({item}) => renderProductCard(item)}
-          keyExtractor={item => item._data.id}
-          extraData={refreshFlatlist}
-        />
-      </View>
-    </>
+    <View className="flex-1 mt-4">
+      <FlatList
+        data={productList}
+        renderItem={({item}) => renderProductCard(item)}
+        keyExtractor={item => item._data.id}
+        extraData={refreshFlatlist}
+      />
+    </View>
   );
 };
 
