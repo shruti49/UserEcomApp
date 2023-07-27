@@ -23,13 +23,8 @@ const ProductCard = props => {
 
   const {userData} = useContext(AuthContext);
 
-  const {
-    item,
-    screenName,
-    refreshFlatlist,
-    setRefreshFlatList,
-    getProducts,
-  } = props;
+  const {item, screenName, refreshFlatlist, setRefreshFlatList, getProducts} =
+    props;
 
   let productData;
   if (screenName === 'cart') {
@@ -53,7 +48,7 @@ const ProductCard = props => {
   const checkUserAuthentication = (item, type) => {
     const customerId = userData.id;
     //if not logged in got to login page
-    if (customerId === null) {
+    if (customerId === '') {
       setIsVisible(true);
     } else {
       const itemId = uuid.v4();
@@ -149,7 +144,8 @@ const ProductCard = props => {
               onPress={() => {
                 decreaseItemQuantity(item);
                 updateFlatList();
-              }}>
+              }}
+              disabled={quantity === 1 ? true : false}>
               <Text className="text-black font-bold text-xl">-</Text>
             </TouchableOpacity>
             <View className="border py-1 px-2 rounded-md">
@@ -160,7 +156,8 @@ const ProductCard = props => {
               onPress={() => {
                 increaseItemQuantity(item);
                 updateFlatList();
-              }}>
+              }}
+              disabled={quantity === 5 ? true : false}>
               <Text className="text-black font-bold text-xl">+</Text>
             </TouchableOpacity>
           </View>

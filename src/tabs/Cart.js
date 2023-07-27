@@ -9,19 +9,20 @@ import {CartContext} from '../context/CartContext';
 import {AuthContext} from '../context/AuthContext';
 
 const Cart = ({navigation}) => {
-  
-  const {getTotalCartAmount, fetchCartItems, cartItemList} = useContext(CartContext);
+  const {fetchCartItems, cartItemList} = useContext(CartContext);
 
   const {userData} = useContext(AuthContext);
 
   const [refreshFlatlist, setRefreshFlatList] = useState(false);
-  
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const customerId = userData.id;
-    fetchCartItems(customerId);
-  }, [isFocused, refreshFlatlist]);
+    if (customerId !== '') {
+      fetchCartItems(customerId);
+    }
+  }, [isFocused]);
 
   const renderProductCard = item => (
     <ProductCard
@@ -31,6 +32,8 @@ const Cart = ({navigation}) => {
       setRefreshFlatList={setRefreshFlatList}
     />
   );
+
+  console.log(cartItemList);
 
   return (
     <>
@@ -59,7 +62,7 @@ const Cart = ({navigation}) => {
               extraData={refreshFlatlist}
             />
           </View>
-          <TotalPriceCard totalAmount={getTotalCartAmount(cartItemList)} />
+          <TotalPriceCard navigation={navigation} />
         </>
       )}
     </>

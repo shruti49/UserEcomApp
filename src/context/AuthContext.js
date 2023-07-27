@@ -7,24 +7,28 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({
+    id: '',
+    name: '',
+    email: '',
+  });
 
-  useEffect(() => {
-    (async () => {
-      const customerId = await AsyncStorage.getItem('customerId');
-      const customerName = await AsyncStorage.getItem('customerName');
-      const customerEmail = await AsyncStorage.getItem('email');
-      setUserData({id: customerId, name: customerName, email: customerEmail});
-    })();
-  }, []);
 
-  const setDataInAsyncStorage = async data => {
+
+  const setDataInAsyncStorage = async (data, navigation) => {
     await AsyncStorage.setItem('customerId', data.customerId);
     await AsyncStorage.setItem('customerName', data.customerName);
     await AsyncStorage.setItem('email', data.email);
+    setUserData({
+      id: data.customerId,
+      name: data.customerName,
+      email: data.customerEmail,
+    });
+
+    navigation.navigate('Home');
   };
 
-  const loginUser = formFields => {
+  const loginUser = (formFields, navigation) => {
     const {email, password} = formFields;
     setLoaderVisible(true);
     firestore()
@@ -36,8 +40,10 @@ export const AuthProvider = ({children}) => {
         if (snapshot.docs.length !== 0) {
           const userObj = snapshot.docs[0]._data;
           if (userObj.password === password) {
-            setDataInAsyncStorage(userObj);
+            setDataInAsyncStorage(userObj, navigation);
           }
+        } else {
+          console.log('oops something went wrong');
         }
       })
       .catch(err => {
@@ -46,7 +52,7 @@ export const AuthProvider = ({children}) => {
       });
   };
 
-  const registerUser = formFields => {
+  const registerUser = (formFields, navigation) => {
     const {displayName, email, phoneNo, password} = formFields;
     setLoaderVisible(true);
     const id = uuid.v4();
@@ -63,6 +69,7 @@ export const AuthProvider = ({children}) => {
       .then(res => {
         setLoaderVisible(false);
         console.log(res);
+        navigation.navigate('Login');
       })
       .catch(err => {
         setLoaderVisible(false);
@@ -70,10 +77,16 @@ export const AuthProvider = ({children}) => {
       });
   };
 
-  const logout = async () => {
+  const logout = async navigation => {
     await AsyncStorage.removeItem('customerId');
     await AsyncStorage.removeItem('customerName');
     await AsyncStorage.removeItem('email');
+    setUserData({
+      id: '',
+      name: '',
+      email: '',
+    });
+    navigation.navigate('Home');
   };
 
   return (

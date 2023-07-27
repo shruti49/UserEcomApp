@@ -1,10 +1,11 @@
 import {useContext} from 'react';
-import {View,Text} from 'react-native';
+import {View, Text} from 'react-native';
 import {CartContext} from '../context/CartContext';
 
 const CheckoutCard = () => {
-  const {cartLength} = useContext(CartContext);
-  console.log(cartLength);
+  const {cartLength, getTotalCartAmount, cartItemList} =
+    useContext(CartContext);
+  const totalPice = getTotalCartAmount(cartItemList);
   return (
     <View
       className="w-11/12 bg-white rounded-md my-4 p-2"
@@ -17,8 +18,10 @@ const CheckoutCard = () => {
         </Text>
       </View>
       <View className="flex-row justify-between mt-4">
-        <Text className="text-black">Bag MRP (1 item)</Text>
-        <Text className=" text-black">7050</Text>
+        <Text className="text-black">
+          Bag MRP ({cartLength} {cartLength > 1 ? 'items' : 'item'})
+        </Text>
+        <Text className=" text-black">{totalPice}</Text>
       </View>
       <View className="flex-row justify-between mt-4">
         <Text className="text-black">Shipping</Text>
@@ -26,7 +29,9 @@ const CheckoutCard = () => {
       </View>
       <View className="flex-row justify-between mt-4">
         <Text className="font-bold text-xl text-black">You Pay</Text>
-        <Text className="font-bold text-xl text-black">7050</Text>
+        <Text className="font-bold text-xl text-black">
+          ₹ {totalPice}
+        </Text>
       </View>
     </View>
   );

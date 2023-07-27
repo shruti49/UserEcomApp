@@ -56,8 +56,7 @@ const Login = ({navigation}) => {
           title="Login"
           handlePress={() => {
             if (inputValidation()) {
-              loginUser(formFields);
-              navigation.navigate('Home');
+              loginUser(formFields, navigation);
             } else Alert.alert('Please fill the data correctly');
           }}
           width="w-11/12"

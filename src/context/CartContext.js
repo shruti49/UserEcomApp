@@ -16,12 +16,14 @@ export const CartProvider = ({children}) => {
       .get()
       .then(snapshot => {
         //if user has added items in cart
-        setCartItemList(snapshot.docs);
-        let totalItemLength = 0;
-        for (let i = 0; i < snapshot.docs.length; i++) {
-          totalItemLength = totalItemLength + snapshot.docs[i]._data.quantity;
+        if (snapshot.docs.length > 0) {
+          setCartItemList(snapshot.docs);
+          let totalItemLength = 0;
+          for (let i = 0; i < snapshot.docs.length; i++) {
+            totalItemLength = totalItemLength + snapshot.docs[i]._data.quantity;
+          }
+          setCartLength(totalItemLength);
         }
-        setCartLength(totalItemLength);
       })
       .catch(err => console.log(err));
   };
@@ -30,9 +32,12 @@ export const CartProvider = ({children}) => {
     (async () => {
       const customerId = await AsyncStorage.getItem('customerId');
       setLoggedInUserId(customerId);
-      fetchCartItems(customerId);
+      if (customerId !== null) {
+        console.log('useEffect');
+        fetchCartItems(customerId);
+      }
     })();
-  }, [cartLength]);
+  }, []);
 
   //const dispatch = useDispatch();
   const addNewItemInCart = (item, itemId, customerId) => {

@@ -15,7 +15,6 @@ import Loader from '../components/Loader';
 import {AuthContext} from '../context/AuthContext';
 
 const SignUp = ({navigation}) => {
-
   const {registerUser, loaderVisible} = useContext(AuthContext);
 
   const defaultFields = {
@@ -103,8 +102,7 @@ const SignUp = ({navigation}) => {
               color="bg-purple-800"
               handlePress={() => {
                 if (inputValidation()) {
-                  registerUser(formFields);
-                  navigation.navigate('Login');
+                  registerUser(formFields, navigation);
                 } else {
                   Alert.alert('Please fill the data correctly');
                 }
