@@ -60,7 +60,8 @@ const Login = ({navigation}) => {
             } else Alert.alert('Please fill the data correctly');
           }}
           width="w-11/12"
-          color="bg-purple-800"
+          bgColor="bg-purple-800"
+          textColor="text-white"
         />
         <View className="items-center mt-10 flex-row">
           <Text className="text-black">Don't have an account?</Text>

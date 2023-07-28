@@ -17,13 +17,15 @@ const AuthenticationModal = props => {
             title="Login"
             width="w-64"
             handlePress={onHandleLogin}
-            color="bg-purple-800"
+            bgColor="bg-purple-800"
+            textColor="text-white"
           />
           <CustomButton
             title="Cancel"
             width="w-64"
             handlePress={onCancel}
-            color="bg-gray-500"
+            bgColor="bg-white"
+            textColor="text-purple-800"
           />
         </View>
       </View>

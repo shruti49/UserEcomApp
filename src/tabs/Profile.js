@@ -8,12 +8,7 @@ const Profile = ({navigation}) => {
     <View>
       <Text className="text-black">{userData.name}</Text>
       {userData.id !== '' && (
-        <Button
-          onPress={() => {
-            logout(navigation);
-          }}
-          title="Logout"
-        />
+        <Button onPress={() => logout(navigation)} title="Logout" />
       )}
     </View>
   );

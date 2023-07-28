@@ -2,13 +2,13 @@ import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 
 const CustomButton = props => {
-  const {handlePress, title, width, color} = props;
+  const {handlePress, title, width, bgColor, textColor} = props;
 
   return (
     <TouchableOpacity
       onPress={handlePress}
-      className={`${width} p-4 content-center items-center self-center mt-8 ${color} rounded-xl`}>
-      <Text className="text-xl text-white">{title}</Text>
+      className={`${width} p-4 content-center items-center self-center mt-8 ${bgColor} rounded-xl`}>
+      <Text className={`${textColor} font-bold text-md`}>{title}</Text>
     </TouchableOpacity>
   );
 };

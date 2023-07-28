@@ -13,18 +13,23 @@ export const AuthProvider = ({children}) => {
     email: '',
   });
 
-
+  useEffect(() => {
+    (async () => {
+      const customerId = await AsyncStorage.getItem('customerId');
+      const customerName = await AsyncStorage.getItem('customerName');
+      const email = await AsyncStorage.getItem('email');
+      setUserData({
+        id: customerId,
+        name: customerName,
+        email: email,
+      });
+    })();
+  }, []);
 
   const setDataInAsyncStorage = async (data, navigation) => {
     await AsyncStorage.setItem('customerId', data.customerId);
     await AsyncStorage.setItem('customerName', data.customerName);
     await AsyncStorage.setItem('email', data.email);
-    setUserData({
-      id: data.customerId,
-      name: data.customerName,
-      email: data.customerEmail,
-    });
-
     navigation.navigate('Home');
   };
 
@@ -81,11 +86,11 @@ export const AuthProvider = ({children}) => {
     await AsyncStorage.removeItem('customerId');
     await AsyncStorage.removeItem('customerName');
     await AsyncStorage.removeItem('email');
-    setUserData({
-      id: '',
-      name: '',
-      email: '',
-    });
+    // setUserData({
+    //   id: '',
+    //   name: '',
+    //   email: '',
+    // });
     navigation.navigate('Home');
   };
 

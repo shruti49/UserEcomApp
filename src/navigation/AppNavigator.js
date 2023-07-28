@@ -8,6 +8,8 @@ import BottomTabNavigator from './BottomTabNavigator';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Checkout from '../screens/Checkout';
+import Address from '../screens/Address';
+import AddAddress from '../screens/AddAddress';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,16 @@ const AppNavigator = () => {
           name="Checkout"
           component={Checkout}
           options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="Address"
+          component={Address}
+          options={{headerShown: true, title: 'Select Shipping Address'}}
+        />
+        <Stack.Screen
+          name="AddAddress"
+          component={AddAddress}
+          options={{headerShown: true, title: 'Enter Address'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

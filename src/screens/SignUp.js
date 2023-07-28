@@ -99,7 +99,8 @@ const SignUp = ({navigation}) => {
             <CustomButton
               width="w-full"
               title="Sign Up"
-              color="bg-purple-800"
+              bgColor="bg-purple-800"
+              textColor="bg-white"
               handlePress={() => {
                 if (inputValidation()) {
                   registerUser(formFields, navigation);
