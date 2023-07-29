@@ -100,7 +100,7 @@ const SignUp = ({navigation}) => {
               width="w-full"
               title="Sign Up"
               bgColor="bg-purple-800"
-              textColor="bg-white"
+              textColor="text-white"
               handlePress={() => {
                 if (inputValidation()) {
                   registerUser(formFields, navigation);

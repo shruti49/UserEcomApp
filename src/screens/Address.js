@@ -3,18 +3,21 @@ import {View, Text, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {AuthContext} from '../context/AuthContext';
 import {AddressContext} from '../context/AddressContext';
+import {useIsFocused} from '@react-navigation/native';
 
 const Address = ({navigation}) => {
   const {userData} = useContext(AuthContext);
-  const {addressList, getAddress, handleSelectedAddress, selectedAddressId} =
+  const {addressList, getAddress, handleSelectedAddress, selectedAddress} =
     useContext(AddressContext);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    //console.log(userData.id);
     getAddress(userData.id);
-  }, []);
+  }, [isFocused]);
 
   const [refreshFlatlist, setRefreshFlatList] = useState();
+
   const renderAddressCard = item => (
     <TouchableOpacity
       className="mt-4 bg-white p-2"
@@ -26,7 +29,9 @@ const Address = ({navigation}) => {
         <Text className="text-black font-semibold text-xl">
           {item.contactName}
         </Text>
-        {<Text>{selectedAddressId === item.id ? '✅' : ''}</Text>}
+        {selectedAddress !== undefined && (
+          <Text>{selectedAddress.id === item.id ? '✅' : ''}</Text>
+        )}
       </View>
       <View className="flex-row w-full justify-between items-end">
         <View className="w-9/12">
@@ -38,7 +43,10 @@ const Address = ({navigation}) => {
         </View>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('AddAddress', {addressId: item.id})
+            navigation.navigate('AddAddress', {
+              addressId: item.id,
+              screenType: 'edit',
+            })
           }>
           <Text className="text-purple-800">Edit</Text>
         </TouchableOpacity>

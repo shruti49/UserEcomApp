@@ -30,6 +30,11 @@ export const AuthProvider = ({children}) => {
     await AsyncStorage.setItem('customerId', data.customerId);
     await AsyncStorage.setItem('customerName', data.customerName);
     await AsyncStorage.setItem('email', data.email);
+    setUserData({
+      id: data.customerId,
+      name: data.customerName,
+      email: data.email,
+    });
     navigation.navigate('Home');
   };
 
@@ -86,11 +91,11 @@ export const AuthProvider = ({children}) => {
     await AsyncStorage.removeItem('customerId');
     await AsyncStorage.removeItem('customerName');
     await AsyncStorage.removeItem('email');
-    // setUserData({
-    //   id: '',
-    //   name: '',
-    //   email: '',
-    // });
+    setUserData({
+      id: "",
+      name: "",
+      email: "",
+    });
     navigation.navigate('Home');
   };
 

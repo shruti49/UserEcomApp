@@ -12,10 +12,23 @@ import {AuthContext} from '../context/AuthContext';
 import Loader from '../components/Loader';
 
 import {AddressContext} from '../context/AddressContext';
+import {useEffect} from 'react';
 
-const AddAddress = ({navigation}) => {
+const AddAddress = ({navigation, route}) => {
+  let addressId;
+  let screenType;
+  if (route.params !== undefined) {
+    if (route.params.addressId !== undefined) {
+      addressId = route.params.addressId;
+    }
+    if (route.params.screenType !== undefined) {
+      screenType = route.params.screenType;
+    }
+  }
+
   const {userData} = useContext(AuthContext);
-  const {saveAddress, loaderVisible} = useContext(AddressContext);
+  const {saveAddress, loaderVisible, getAddressById, address} =
+    useContext(AddressContext);
 
   const defaultFields = {
     street: '',
@@ -26,7 +39,7 @@ const AddAddress = ({navigation}) => {
     contactNumber: '',
   };
 
-  const [defaultAddress, setDefaultAddress] = useState(true);
+  const [defaultAddress, setDefaultAddress] = useState(false);
   const toggleSwitch = () => setDefaultAddress(!defaultAddress);
 
   const [formFields, setFormFields] = useState(defaultFields);
@@ -49,6 +62,48 @@ const AddAddress = ({navigation}) => {
     }
 
     return true;
+  };
+
+  useEffect(() => {
+    if (addressId !== undefined) {
+      getAddressById(addressId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (address !== undefined && addressId !== undefined) {
+      const {
+        street,
+        city,
+        state,
+        pincode,
+        contactName,
+        contactNumber,
+        defaultAddress,
+      } = address[0]._data;
+      setFormFields({
+        street,
+        city,
+        state,
+        pincode,
+        contactName,
+        contactNumber,
+      });
+      setDefaultAddress(defaultAddress);
+    } else {
+      clearInputFields();
+    }
+  }, [address, addressId]);
+
+  const clearInputFields = () => {
+    setFormFields({
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+      contactName: '',
+      contactNumber: '',
+    });
   };
 
   return (
@@ -110,7 +165,15 @@ const AddAddress = ({navigation}) => {
           title="Ship to this address"
           handlePress={() => {
             if (inputValidation)
-              saveAddress(formFields, navigation, userData.id, defaultAddress);
+              saveAddress(
+                formFields,
+                navigation,
+                userData.id,
+                defaultAddress,
+                screenType,
+                addressId,
+                setFormFields,
+              );
           }}
           width="w-full"
           bgColor="bg-purple-800"

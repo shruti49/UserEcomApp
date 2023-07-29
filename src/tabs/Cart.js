@@ -33,7 +33,6 @@ const Cart = ({navigation}) => {
     />
   );
 
-  //console.log(cartItemList);
 
   return (
     <>

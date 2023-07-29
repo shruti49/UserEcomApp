@@ -48,9 +48,7 @@ const ProductCard = props => {
   const checkUserAuthentication = (item, type) => {
     const customerId = userData.id;
     //if not logged in got to login page
-    if (customerId === '') {
-      setIsVisible(true);
-    } else {
+    if (customerId) {
       const itemId = uuid.v4();
       if (type === 'bag') {
         firestore()
@@ -77,6 +75,8 @@ const ProductCard = props => {
             }
           });
       }
+    } else {
+      setIsVisible(true);
     }
   };
 

@@ -1,13 +1,14 @@
 import {createContext, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
+import {useEffect} from 'react';
 
 export const AddressContext = createContext();
 
 export const AddressProvider = ({children}) => {
-  const [addressList, setAddressList] = useState();
-  const [defaultAddressId, setDefaultAddressId] = useState();
-  const [selectedAddressId, setSelectedAddressId] = useState(defaultAddressId);
+  const [addressList, setAddressList] = useState([]);
+  const [address, setAddress] = useState();
+  const [selectedAddress, setSelectedAddress] = useState();
   const [loaderVisible, setLoaderVisible] = useState(false);
 
   const getAddress = id => {
@@ -21,11 +22,21 @@ export const AddressProvider = ({children}) => {
       .catch(err => console.log(err));
   };
 
+  const getAddressById = addressId => {
+    firestore()
+      .collection('address')
+      .where('id', '==', addressId)
+      .get()
+      .then(snapshot => setAddress(snapshot.docs))
+      .catch(err => console.log(err));
+  };
+
   const addNewAddress = (
     formFields,
     navigation,
     customerId,
     defaultAddress,
+    setFormFields,
   ) => {
     const {street, city, state, pincode, contactName, contactNumber} =
       formFields;
@@ -46,7 +57,14 @@ export const AddressProvider = ({children}) => {
       })
       .then(snapshot => {
         setLoaderVisible(false);
-        setDefaultAddressId(addressId);
+        setFormFields({
+          street: '',
+          city: '',
+          state: '',
+          pincode: '',
+          contactName: '',
+          contactNumber: '',
+        });
         navigation.goBack();
       })
       .catch(err => {
@@ -55,7 +73,55 @@ export const AddressProvider = ({children}) => {
       });
   };
 
-  const saveAddress = (formFields, navigation, customerId, defaultAddress) => {
+  const editAddress = (
+    formFields,
+    navigation,
+    addressId,
+    defaultAddress,
+    setFormFields,
+  ) => {
+    setLoaderVisible(true);
+    const {street, city, state, pincode, contactName, contactNumber} =
+      formFields;
+    firestore()
+      .collection('address')
+      .doc(addressId)
+      .update({
+        street,
+        city,
+        state,
+        pincode,
+        contactName,
+        contactNumber,
+        defaultAddress,
+      })
+      .then(snapshot => {
+        setLoaderVisible(false);
+        setFormFields({
+          street: '',
+          city: '',
+          state: '',
+          pincode: '',
+          contactName: '',
+          contactNumber: '',
+        });
+        navigation.goBack();
+      })
+      .catch(err => {
+        setLoaderVisible(false);
+        console.log(err);
+      });
+  };
+
+  const saveAddress = (
+    formFields,
+    navigation,
+    customerId,
+    defaultAddress,
+    screenType,
+    addressId,
+    setFormFields,
+  ) => {
     setLoaderVisible(true);
     if (defaultAddress) {
       //check whether user has added any address or not
@@ -73,16 +139,59 @@ export const AddressProvider = ({children}) => {
               });
             });
           }
-          addNewAddress(formFields, navigation, customerId, defaultAddress);
+          if (screenType === 'edit') {
+            editAddress(
+              formFields,
+              navigation,
+              addressId,
+              defaultAddress,
+              setFormFields,
+            );
+          } else {
+            addNewAddress(
+              formFields,
+              navigation,
+              customerId,
+              defaultAddress,
+              setFormFields,
+            );
+          }
         })
         .catch(err => console.log(err));
     } else {
-      addNewAddress(formFields, navigation, customerId, defaultAddress);
+      if (screenType === 'edit') {
+        editAddress(
+          formFields,
+          navigation,
+          addressId,
+          defaultAddress,
+          setFormFields,
+        );
+      } else {
+        addNewAddress(
+          formFields,
+          navigation,
+          customerId,
+          defaultAddress,
+          setFormFields,
+        );
+      }
     }
   };
 
   const handleSelectedAddress = item => {
-    setSelectedAddressId(item.id);
+    setSelectedAddress(item);
+  };
+
+  const clearFormFields = () => {
+    setFormFields({
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+      contactName: '',
+      contactNumber: '',
+    });
   };
 
   return (
@@ -91,9 +200,12 @@ export const AddressProvider = ({children}) => {
         addressList,
         getAddress,
         handleSelectedAddress,
-        selectedAddressId,
+        selectedAddress,
         saveAddress,
         loaderVisible,
+        editAddress,
+        getAddressById,
+        address,
       }}>
       {children}
     </AddressContext.Provider>
