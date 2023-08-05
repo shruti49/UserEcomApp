@@ -1,30 +1,56 @@
-import React, {useContext} from 'react';
-import {View, Text} from 'react-native';
-import {AuthContext} from '../context/AuthContext';
-import CustomButton from './CustomButton';
+import React from 'react';
+import {View, Text,TouchableOpacity} from 'react-native';
 
-const AddressCard = ({navigation}) => {
-  const {userData} = useContext(AuthContext);
+const AddressCard = ({
+  navigation,
+  item,
+  setSelectedAddress,
+  selectedAddress,
+}) => {
+  const {
+    isDefault,
+    contactName,
+    contactNumber,
+    street,
+    city,
+    pincode,
+    state,
+    id,
+  } = item;
   return (
-    <View
-      className="w-11/12 bg-purple-100 rounded-md my-4 p-4"
-      style={{elevation: 5}}>
-      <View className="flex-row items-center">
-        <Text className="font-bold text-lg text-black">Deliver to</Text>
-        <Text className="text-black"> {userData.name}, 110053</Text>
+    <TouchableOpacity
+      className="mt-4 bg-white p-2"
+      onPress={() => {
+        setSelectedAddress(item);
+      }}>
+      {isDefault && (
+        <Text className="text-purple-800 font-semibold text-md">DEFAULT</Text>
+      )}
+      <View className="flex-row justify-between items-center">
+        <Text className="text-black font-semibold text-xl">{contactName}</Text>
+        {selectedAddress !== undefined && (
+          <Text>{selectedAddress.id === id ? '✅' : ''}</Text>
+        )}
       </View>
-      <Text className="text-black">adress</Text>
-      <Text className="text-black">city</Text>
-      <Text className="text-black">state - 110053</Text>
-      <Text className="text-black">9876543210</Text>
-      <CustomButton
-        width="w-11/12"
-        title="Change or Add Address"
-        bgColor="bg-white"
-        textColor="text-purple-800"
-        handlePress={() => navigation.navigate('Address')}
-      />
-    </View>
+      <View className="flex-row w-full justify-between items-end">
+        <View className="w-9/12">
+          <Text className="text-black text-md mt-2">{street}</Text>
+          <Text className="text-black text-md">
+            {city} - {pincode}, {state}
+          </Text>
+          <Text className="text-black text-md">{contactNumber}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('AddAddress', {
+              addressId: id,
+              screenType: 'edit',
+            })
+          }>
+          <Text className="text-purple-800">Edit</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
   );
 };
 

@@ -39,8 +39,8 @@ const AddAddress = ({navigation, route}) => {
     contactNumber: '',
   };
 
-  const [defaultAddress, setDefaultAddress] = useState(false);
-  const toggleSwitch = () => setDefaultAddress(!defaultAddress);
+  const [isDefault, setIsDefault] = useState(false);
+  const toggleSwitch = () => setIsDefault(!isDefault);
 
   const [formFields, setFormFields] = useState(defaultFields);
   const {street, city, state, pincode, contactName, contactNumber} = formFields;
@@ -79,7 +79,7 @@ const AddAddress = ({navigation, route}) => {
         pincode,
         contactName,
         contactNumber,
-        defaultAddress,
+        isDefault,
       } = address[0]._data;
       setFormFields({
         street,
@@ -89,7 +89,7 @@ const AddAddress = ({navigation, route}) => {
         contactName,
         contactNumber,
       });
-      setDefaultAddress(defaultAddress);
+      setIsDefault(isDefault);
     } else {
       clearInputFields();
     }
@@ -140,7 +140,7 @@ const AddAddress = ({navigation, route}) => {
             <Text className="font-semibold text-base text-black">
               Use as default Address
             </Text>
-            <Switch onValueChange={toggleSwitch} value={defaultAddress} />
+            <Switch onValueChange={toggleSwitch} value={isDefault} />
           </View>
           <View className="mt-4">
             <Text className="text-black font-bold text-xl">Contact</Text>
@@ -169,7 +169,7 @@ const AddAddress = ({navigation, route}) => {
                 formFields,
                 navigation,
                 userData.id,
-                defaultAddress,
+                isDefault,
                 screenType,
                 addressId,
                 setFormFields,

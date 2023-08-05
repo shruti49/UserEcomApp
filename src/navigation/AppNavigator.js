@@ -10,6 +10,7 @@ import SignUp from '../screens/SignUp';
 import Checkout from '../screens/Checkout';
 import Address from '../screens/Address';
 import AddAddress from '../screens/AddAddress';
+import Success from '../screens/Success';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ const AppNavigator = () => {
           component={AddAddress}
           options={{headerShown: true, title: 'Enter Address'}}
         />
+        <Stack.Screen name="Success" component={Success} />
       </Stack.Navigator>
     </NavigationContainer>
   );

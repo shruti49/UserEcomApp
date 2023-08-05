@@ -15,25 +15,30 @@ export const AuthProvider = ({children}) => {
 
   useEffect(() => {
     (async () => {
-      const customerId = await AsyncStorage.getItem('customerId');
-      const customerName = await AsyncStorage.getItem('customerName');
+      const id = await AsyncStorage.getItem('id');
+      const name = await AsyncStorage.getItem('name');
       const email = await AsyncStorage.getItem('email');
+      const phoneNo = await AsyncStorage.getItem('phoneNo');
       setUserData({
-        id: customerId,
-        name: customerName,
-        email: email,
+        id,
+        name,
+        email,
+        phoneNo,
       });
     })();
   }, []);
 
   const setDataInAsyncStorage = async (data, navigation) => {
-    await AsyncStorage.setItem('customerId', data.customerId);
-    await AsyncStorage.setItem('customerName', data.customerName);
+    await AsyncStorage.setItem('id', data.customerId);
+    await AsyncStorage.setItem('name', data.customerName);
     await AsyncStorage.setItem('email', data.email);
+    await AsyncStorage.setItem('phoneNo', data.phoneNo);
+
     setUserData({
-      id: data.customerId,
-      name: data.customerName,
+      id: data.id,
+      name: data.name,
       email: data.email,
+      phoneNo: data.phoneNo,
     });
     navigation.navigate('Home');
   };
@@ -88,13 +93,15 @@ export const AuthProvider = ({children}) => {
   };
 
   const logout = async navigation => {
-    await AsyncStorage.removeItem('customerId');
-    await AsyncStorage.removeItem('customerName');
+    await AsyncStorage.removeItem('id');
+    await AsyncStorage.removeItem('name');
     await AsyncStorage.removeItem('email');
+    await AsyncStorage.removeItem('phoneNo');
     setUserData({
-      id: "",
-      name: "",
-      email: "",
+      id: '',
+      name: '',
+      email: '',
+      phoneNo: '',
     });
     navigation.navigate('Home');
   };

@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon} from 'react-native-eva-icons';
 
@@ -10,10 +10,18 @@ import Wishlist from '../tabs/Wishlist';
 import Profile from '../tabs/Profile';
 import Cart from '../tabs/Cart';
 
+import {AuthContext} from '../context/AuthContext';
+
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const {userData} = useContext(AuthContext);
   const {cartLength} = useContext(CartContext);
+  const {fetchCartItems} = useContext(CartContext);
+
+  useEffect(() => {
+    fetchCartItems(userData.id);
+  }, [userData]);
 
   return (
     <Tab.Navigator

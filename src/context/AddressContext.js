@@ -1,15 +1,30 @@
-import {createContext, useState} from 'react';
+import {createContext, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
-import {useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AddressContext = createContext();
 
 export const AddressProvider = ({children}) => {
   const [addressList, setAddressList] = useState([]);
   const [address, setAddress] = useState();
-  const [selectedAddress, setSelectedAddress] = useState();
+  const [shippingAddress, setShippingAddress] = useState();
   const [loaderVisible, setLoaderVisible] = useState(false);
+
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const value = await AsyncStorage.getItem('address');
+        if (value !== null) {
+          // We have data!!
+          setShippingAddress(JSON.parse(value));
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
+    })();
+  }, []);
 
   const getAddress = id => {
     firestore()
@@ -19,6 +34,7 @@ export const AddressProvider = ({children}) => {
       .then(snapshot => {
         setAddressList(snapshot.docs);
       })
+
       .catch(err => console.log(err));
   };
 
@@ -35,7 +51,7 @@ export const AddressProvider = ({children}) => {
     formFields,
     navigation,
     customerId,
-    defaultAddress,
+    isDefault,
     setFormFields,
   ) => {
     const {street, city, state, pincode, contactName, contactNumber} =
@@ -53,9 +69,9 @@ export const AddressProvider = ({children}) => {
         pincode,
         contactName,
         contactNumber,
-        defaultAddress,
+        isDefault,
       })
-      .then(snapshot => {
+      .then(res => {
         setLoaderVisible(false);
         setFormFields({
           street: '',
@@ -77,7 +93,7 @@ export const AddressProvider = ({children}) => {
     formFields,
     navigation,
     addressId,
-    defaultAddress,
+    isDefault,
     setFormFields,
   ) => {
     setLoaderVisible(true);
@@ -93,7 +109,7 @@ export const AddressProvider = ({children}) => {
         pincode,
         contactName,
         contactNumber,
-        defaultAddress,
+        isDefault,
       })
       .then(snapshot => {
         setLoaderVisible(false);
@@ -117,70 +133,81 @@ export const AddressProvider = ({children}) => {
     formFields,
     navigation,
     customerId,
-    defaultAddress,
+    isDefault,
     screenType,
     addressId,
     setFormFields,
   ) => {
     setLoaderVisible(true);
-    if (defaultAddress) {
-      //check whether user has added any address or not
-      firestore()
-        .collection('address')
-        .where('customerId', '==', customerId)
-        .get()
-        .then(snapshot => {
-          if (snapshot.docs.length > 0) {
+
+    //check whether user has added any address or not
+    firestore()
+      .collection('address')
+      .where('customerId', '==', customerId)
+      .get()
+      .then(snapshot => {
+        //If there are no addresses
+        //Case - isDefault(true)
+        //then simply save address
+
+        //Case - isDefault(false)
+        //set isDefault true
+
+        if (!isDefault && snapshot.docs.length === 0) {
+          isDefault = true;
+        }
+
+        //If there are addresses
+        if (snapshot.docs.length > 0) {
+          //Case - isDefault(true)
+          if (isDefault) {
             //looping over all the address added by the user
             snapshot.docs.map(address => {
-              //make defaultaddress as false
+              //make isDefault false for every other address in list
               firestore().collection('address').doc(address._data.id).update({
-                defaultAddress: false,
+                isDefault: false,
               });
             });
           }
-          if (screenType === 'edit') {
-            editAddress(
-              formFields,
-              navigation,
-              addressId,
-              defaultAddress,
-              setFormFields,
+          //Case - isDefault(false)
+          else {
+            //find the address with isDefault true
+            //if no defaultAddress is found then make
+            //the first one as default
+            const add = snapshot.docs.filter(
+              add => add._data.isDefault === true,
             );
-          } else {
-            addNewAddress(
-              formFields,
-              navigation,
-              customerId,
-              defaultAddress,
-              setFormFields,
-            );
-          }
-        })
-        .catch(err => console.log(err));
-    } else {
-      if (screenType === 'edit') {
-        editAddress(
-          formFields,
-          navigation,
-          addressId,
-          defaultAddress,
-          setFormFields,
-        );
-      } else {
-        addNewAddress(
-          formFields,
-          navigation,
-          customerId,
-          defaultAddress,
-          setFormFields,
-        );
-      }
-    }
-  };
 
-  const handleSelectedAddress = item => {
-    setSelectedAddress(item);
+            if (add.length === 0) {
+              firestore()
+                .collection('address')
+                .doc(snapshot.docs[0]._data.id)
+                .update({
+                  isDefault: true,
+                });
+            }
+          }
+        }
+
+        if (screenType === 'edit') {
+          editAddress(
+            formFields,
+            navigation,
+            addressId,
+            isDefault,
+            setFormFields,
+          );
+        } else {
+          addNewAddress(
+            formFields,
+            navigation,
+            customerId,
+            isDefault,
+            setFormFields,
+          );
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   const clearFormFields = () => {
@@ -194,18 +221,48 @@ export const AddressProvider = ({children}) => {
     });
   };
 
+  const handleSelectedAddress = async (selectedAddress, navigation) => {
+    setLoaderVisible(true);
+    await AsyncStorage.setItem(
+      'address',
+      JSON.stringify(selectedAddress),
+      err => {
+        if (err) {
+          console.log('an error');
+          throw err;
+        }
+        console.log('success');
+      },
+    ).catch(err => {
+      console.log('error is: ' + err);
+    });
+    try {
+      const value = await AsyncStorage.getItem('address');
+      if (value !== null) {
+        // We have data!!
+        //console.log(JSON.parse(value));
+        setShippingAddress(JSON.parse(value));
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+    setLoaderVisible(false);
+    navigation.navigate('Checkout');
+  };
+
   return (
     <AddressContext.Provider
       value={{
         addressList,
         getAddress,
-        handleSelectedAddress,
-        selectedAddress,
+        setShippingAddress,
+        shippingAddress,
         saveAddress,
         loaderVisible,
         editAddress,
         getAddressById,
         address,
+        handleSelectedAddress,
       }}>
       {children}
     </AddressContext.Provider>
