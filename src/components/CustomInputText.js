@@ -7,7 +7,7 @@ const CustomInputText = props => {
 
   return (
     <View
-      className={`border-2 rounded-lg mt-8 p-1 ${
+      className={`border-2 rounded-lg p-1 ${
         multiline ? 'h-24' : 'h-14'
       } ${width}`}>
       <TextInput

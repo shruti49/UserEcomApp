@@ -5,9 +5,8 @@ import {Icon} from 'react-native-eva-icons';
 import {CartContext} from '../context/CartContext';
 
 import Home from '../tabs/Home';
-import Search from '../tabs/Search';
 import Wishlist from '../tabs/Wishlist';
-import Profile from '../tabs/Profile';
+import Account from '../tabs/Account';
 import Cart from '../tabs/Cart';
 
 import {AuthContext} from '../context/AuthContext';
@@ -21,7 +20,7 @@ const BottomTabNavigator = () => {
 
   useEffect(() => {
     fetchCartItems(userData.id);
-  }, [userData]);
+  }, [userData,cartLength]);
 
   return (
     <Tab.Navigator
@@ -38,13 +37,11 @@ const BottomTabNavigator = () => {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Search') {
-            iconName = focused ? 'search' : 'search-outline';
           } else if (route.name === 'Cart') {
             iconName = focused ? 'shopping-cart' : 'shopping-cart-outline';
           } else if (route.name === 'Wishlist') {
             iconName = focused ? 'heart' : 'heart-outline';
-          } else if (route.name === 'Profile') {
+          } else if (route.name === 'Account') {
             iconName = focused ? 'person' : 'person-outline';
           }
 
@@ -58,11 +55,6 @@ const BottomTabNavigator = () => {
       })}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{title: 'Search'}}
-      />
-      <Tab.Screen
         name="Cart"
         component={Cart}
         options={cartLength > 0 && {tabBarBadge: cartLength}}
@@ -73,9 +65,9 @@ const BottomTabNavigator = () => {
         options={{title: 'Wishlist'}}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{title: 'Profile'}}
+        name="Account"
+        component={Account}
+        options={{title: 'Account'}}
       />
     </Tab.Navigator>
   );

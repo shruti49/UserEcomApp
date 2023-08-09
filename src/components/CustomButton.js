@@ -7,7 +7,7 @@ const CustomButton = props => {
   return (
     <TouchableOpacity
       onPress={handlePress}
-      className={`${width} p-4 content-center items-center self-center mt-8 ${bgColor} rounded-xl`}>
+      className={`${width} p-4 content-center items-center self-center ${bgColor} rounded-xl`}>
       <Text className={`${textColor} font-bold text-md`}>{title}</Text>
     </TouchableOpacity>
   );

@@ -3,9 +3,11 @@ import {View, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard';
 import {useIsFocused} from '@react-navigation/native';
+import SearchCard from '../components/SearchCard';
 
 const Home = () => {
   const [productList, setProductList] = useState([]);
+  const [filteredProductList, setFilteredProductList] = useState([]);
   const [refreshFlatlist, setRefreshFlatList] = useState(false);
   const isFocused = useIsFocused();
 
@@ -15,11 +17,11 @@ const Home = () => {
       .get()
       .then(snapshot => {
         if (snapshot._docs.length > 0) {
-          setProductList(snapshot._docs);
+          setProductList(snapshot.docs);
+          setFilteredProductList(snapshot.docs);
         }
       });
   };
-
 
   useEffect(() => {
     getProducts();
@@ -35,9 +37,13 @@ const Home = () => {
   );
 
   return (
-    <View className="flex-1 mt-4">
+    <View className="flex-1 mx-auto mt-4 w-11/12">
+      <SearchCard
+        productList={productList}
+        setFilteredProductList={setFilteredProductList}
+      />
       <FlatList
-        data={productList}
+        data={filteredProductList}
         renderItem={({item}) => renderProductCard(item)}
         keyExtractor={item => item._data.id}
         extraData={refreshFlatlist}

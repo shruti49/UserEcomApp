@@ -14,16 +14,18 @@ const Checkout = ({navigation}) => {
   const {userData} = useContext(AuthContext);
 
   const orderPlaced = paymentId => {
+    const cartList = [];
     cartItemList.map(item => {
-      const orderId = uuid.v4();
-      firestore()
-        .collection('orders')
-        .doc(orderId)
-        .set({
-          ...item._data,
-          orderId,
-          paymentId,
-        });
+      cartList.push(item._data);
+      firestore().collection('cart').doc(item._data.itemId).delete();
+    });
+    const orderId = uuid.v4();
+    firestore().collection('orders').doc(orderId).set({
+      cartItems: cartList,
+      orderId,
+      paymentId,
+      status: 'Placed',
+      userId: userData.id,
     });
     navigation.navigate('Success');
   };
@@ -59,13 +61,15 @@ const Checkout = ({navigation}) => {
     <View className="flex-1 items-center">
       <CheckoutCard />
       <ShippingCard navigation={navigation} />
-      <CustomButton
-        title="Pay Now"
-        bgColor="bg-purple-800"
-        textColor="text-white"
-        width="w-11/12"
-        handlePress={handlePaymentGateway}
-      />
+      <View className="flex-1 w-full justify-end">
+        <CustomButton
+          title="Pay Now"
+          bgColor="bg-purple-800"
+          textColor="text-white"
+          width="w-11/12"
+          handlePress={handlePaymentGateway}
+        />
+      </View>
     </View>
   );
 };

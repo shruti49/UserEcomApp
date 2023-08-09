@@ -50,7 +50,7 @@ const ProductCard = props => {
     //if not logged in got to login page
     if (customerId) {
       const itemId = uuid.v4();
-      if (type === 'bag') {
+      if (type === 'cart') {
         firestore()
           .collection('cart')
           .where('userId', '==', customerId)
@@ -81,8 +81,9 @@ const ProductCard = props => {
   };
 
   return (
+    
     <View
-      className="w-11/12 mx-auto mb-4 bg-white rounded-lg p-2"
+      className="mb-4 bg-white rounded-lg p-2"
       style={{elevation: 5}}>
       <View
         className={
@@ -128,9 +129,9 @@ const ProductCard = props => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => checkUserAuthentication(item, 'bag')}
+                onPress={() => checkUserAuthentication(item, 'cart')}
                 className="p-2 content-center items-center self-center rounded-lg bg-purple-800">
-                <Text className="text-white">Add to Bag</Text>
+                <Text className="text-white">Add to Cart</Text>
               </TouchableOpacity>
             </>
           )}
