@@ -38,16 +38,16 @@ const Login = ({navigation}) => {
       <View
         className="w-[95%] h-full items-center bg-white absolute top-48 rounded-t-[40px]"
         style={{elevation: 2}}>
-        <Text className="text-2xl font-medium mt-5 text-purple-800">Login</Text>
+        <Text className="text-2xl font-medium my-6 text-purple-800">Login</Text>
         <CustomInputText
           placeholder="Enter Email"
-          width="w-11/12"
+          style="w-11/12 mb-4"
           value={email}
           handleChange={val => handleInput(val, 'email')}
         />
         <CustomInputText
           placeholder="Enter Password"
-          width="w-11/12"
+          style="w-11/12 mb-4"
           value={password}
           textType="password"
           handleChange={val => handleInput(val, 'password')}
@@ -59,8 +59,7 @@ const Login = ({navigation}) => {
               loginUser(formFields, navigation);
             } else Alert.alert('Please fill the data correctly');
           }}
-          width="w-11/12"
-          bgColor="bg-purple-800"
+          style="w-11/12 bg-purple-800"
           textColor="text-white"
         />
         <View className="items-center mt-10 flex-row">

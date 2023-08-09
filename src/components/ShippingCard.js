@@ -11,9 +11,8 @@ const ShippingCard = ({navigation}) => {
   if (shippingAddress === undefined) {
     return (
       <CustomButton
-        width="w-11/12"
-        title="Select or Add Shipment  Address"
-        bgColor="bg-white"
+        style="w-11/12 bg-white"
+        title="Select or Add Shipment Address"
         textColor="text-purple-800"
         handlePress={() => navigation.navigate('Address')}
       />
@@ -37,9 +36,8 @@ const ShippingCard = ({navigation}) => {
       </Text>
       <Text className="text-black">{contactNumber}</Text>
       <CustomButton
-        width="w-11/12"
+        style="w-11/12 bg-white"
         title="Change or Add Address"
-        bgColor="bg-white"
         textColor="text-purple-800"
         handlePress={() => navigation.navigate('Address')}
       />

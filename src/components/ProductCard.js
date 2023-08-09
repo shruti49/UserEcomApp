@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
 import AuthenticationModal from '../components/AuthenticationModal';
+import {WishlistContext} from '../context/WishlistContext';
 import {CartContext} from '../context/CartContext';
 import {AuthContext} from '../context/AuthContext';
 import uuid from 'react-native-uuid';
@@ -16,10 +17,13 @@ const ProductCard = props => {
     increaseItemQuantity,
     decreaseItemQuantity,
     removeItemfromCart,
-    updatePrice,
     addNewItemInCart,
     fetchCartItems,
+    updatePrice,
   } = useContext(CartContext);
+
+  const {removeItemFromWishlist, addNewItemInWishlist} =
+    useContext(WishlistContext);
 
   const {userData} = useContext(AuthContext);
 
@@ -37,6 +41,8 @@ const ProductCard = props => {
   const {name, price, description, imageUrl} = productData;
 
   const [isVisible, setIsVisible] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(true);
+  const [actionType, setActionType] = useState();
 
   const updateFlatList = () => {
     setRefreshFlatList(!refreshFlatlist);
@@ -46,6 +52,7 @@ const ProductCard = props => {
 
   //check user is logged in or not
   const checkUserAuthentication = (item, type) => {
+    setActionType(type);
     const customerId = userData.id;
     //if not logged in got to login page
     if (customerId) {
@@ -74,6 +81,13 @@ const ProductCard = props => {
               addNewItemInCart(item, itemId, customerId);
             }
           });
+      } else {
+        setIsWishlisted(!isWishlisted);
+        if (isWishlisted) {
+          addNewItemInWishlist(item, itemId, customerId);
+        } else {
+          removeItemFromWishlist(itemId);
+        }
       }
     } else {
       setIsVisible(true);
@@ -81,10 +95,7 @@ const ProductCard = props => {
   };
 
   return (
-    
-    <View
-      className="mb-4 bg-white rounded-lg p-2"
-      style={{elevation: 5}}>
+    <View className="mb-4 bg-white rounded-lg p-2" style={{elevation: 5}}>
       <View
         className={
           screenName === 'cart'
@@ -122,7 +133,7 @@ const ProductCard = props => {
               <TouchableOpacity
                 onPress={() => checkUserAuthentication(item, 'wishlist')}>
                 <Icon
-                  name="heart-outline"
+                  name={isWishlisted ? 'heart-outline' : 'heart'}
                   width={24}
                   height={24}
                   fill={'rgb(107 33 168)'}
@@ -172,6 +183,7 @@ const ProductCard = props => {
 
       <AuthenticationModal
         isVisible={isVisible}
+        type={actionType}
         onCancel={() => setIsVisible(false)}
         onHandleLogin={() => {
           setIsVisible(false);

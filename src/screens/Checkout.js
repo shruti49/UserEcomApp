@@ -64,9 +64,8 @@ const Checkout = ({navigation}) => {
       <View className="flex-1 w-full justify-end">
         <CustomButton
           title="Pay Now"
-          bgColor="bg-purple-800"
+          style="w-11/12 bg-purple-800"
           textColor="text-white"
-          width="w-11/12"
           handlePress={handlePaymentGateway}
         />
       </View>

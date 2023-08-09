@@ -2,14 +2,14 @@ import React from 'react';
 import {View, TextInput} from 'react-native';
 
 const CustomInputText = props => {
-  const {placeholder, value, handleChange, type, width, multiline, textType} =
+  const {placeholder, value, handleChange, type, style, multiline, textType} =
     props;
 
   return (
     <View
       className={`border-2 rounded-lg p-1 ${
         multiline ? 'h-24' : 'h-14'
-      } ${width}`}>
+      } ${style}`}>
       <TextInput
         autoFocus={true}
         autoCorrect={false}
@@ -22,7 +22,6 @@ const CustomInputText = props => {
         placeholderTextColor="black"
         secureTextEntry={textType === 'password' ? true : false}
         multiline={multiline}
-        // onFocus={handleFocus}
       />
     </View>
   );

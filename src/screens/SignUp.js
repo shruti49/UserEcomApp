@@ -64,7 +64,7 @@ const SignUp = ({navigation}) => {
       <View
         className="w-[94%] h-full items-center bg-white absolute top-48 rounded-t-[40px]"
         style={{elevation: 2}}>
-        <Text className="text-2xl font-medium mt-5 text-purple-700">
+        <Text className="text-2xl font-medium my-6 text-purple-700">
           Sign Up
         </Text>
         <KeyboardAvoidingView className="w-11/12" behavior="padding">
@@ -97,9 +97,8 @@ const SignUp = ({navigation}) => {
               handleChange={val => handleFormFields(val, 'confirmPassword')}
             />
             <CustomButton
-              width="w-full"
+              style="w-full bg-purple-800"
               title="Sign Up"
-              bgColor="bg-purple-800"
               textColor="text-white"
               handlePress={() => {
                 if (inputValidation()) {

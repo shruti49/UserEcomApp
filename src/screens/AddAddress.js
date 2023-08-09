@@ -175,8 +175,7 @@ const AddAddress = ({navigation, route}) => {
                 setFormFields,
               );
           }}
-          width="w-full"
-          bgColor="bg-purple-800"
+          style="w-full bg-purple-800"
           textColor="text-white"
         />
       </KeyboardAvoidingView>

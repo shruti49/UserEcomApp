@@ -28,7 +28,7 @@ const SearchCard = ({productList, setFilteredProductList}) => {
     <View className="flex-row justify-between mb-8">
       <CustomInputText
         placeholder="Type here"
-        width="w-8/12"
+        style="w-[72%]"
         value={searchText}
         handleChange={handleSearchText}
       />

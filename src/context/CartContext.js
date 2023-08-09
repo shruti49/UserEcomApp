@@ -106,6 +106,7 @@ export const CartProvider = ({children}) => {
     return totalSum;
   };
 
+
   return (
     <CartContext.Provider
       value={{

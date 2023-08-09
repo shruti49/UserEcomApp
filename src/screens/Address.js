@@ -50,8 +50,7 @@ const Address = ({navigation}) => {
       {addressList.length > 0 && (
         <CustomButton
           title="Ship to this address"
-          width="w-full"
-          bgColor="bg-purple-800"
+          style="w-full bg-purple-800"
           textColor="text-white"
           handlePress={() => handleSelectedAddress(selectedAddress, navigation)}
         />
