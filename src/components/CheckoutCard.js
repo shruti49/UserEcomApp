@@ -8,7 +8,7 @@ const CheckoutCard = () => {
   const totalPice = getTotalCartAmount(cartItemList);
   return (
     <View
-      className="w-11/12 bg-white rounded-md my-4 p-2"
+      className="w-11/12 bg-white rounded-md mb-4 p-2"
       style={{elevation: 5}}>
       <Text className="font-bold text-lg text-black">Price Details</Text>
       <View className="flex-row justify-between mt-4">

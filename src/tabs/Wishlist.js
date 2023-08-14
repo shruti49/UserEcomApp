@@ -32,7 +32,7 @@ const Wishlist = ({navigation}) => {
       setRefreshFlatList={setRefreshFlatList}
     />
   );
-  console.log("Wishlist Page render");
+
   return (
     <>
       {likedItemsList.length === 0 ? (

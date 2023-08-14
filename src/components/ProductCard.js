@@ -86,12 +86,12 @@ const ProductCard = props => {
             }
           });
       } else {
-        wishlistingItem(item?._data?.id);
         firestore()
           .collection('wishlist')
           .where('userId', '==', customerId)
           .get()
           .then(snapshot => {
+            //wishlistingItem(item?._data?.productId);
             if (snapshot.docs.length > 0) {
               snapshot.docs.map(wishlistedItem => {
                 const productId = wishlistedItem?._data?.itemData?.productId;
@@ -119,7 +119,7 @@ const ProductCard = props => {
       setIsVisible(true);
     }
   };
-  console.log('Product render');
+
   return (
     <View className="mb-4 bg-white rounded-lg p-2" style={{elevation: 5}}>
       <View
@@ -208,7 +208,7 @@ const ProductCard = props => {
           </View>
           <View>
             <Text className="text-black font-bold text-xl">
-              ₹ {updatePrice(quantity, price)}
+              ₹ {updatePrice(quantity, productPrice)}
             </Text>
           </View>
         </View>

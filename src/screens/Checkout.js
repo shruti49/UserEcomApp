@@ -58,7 +58,7 @@ const Checkout = ({navigation}) => {
   };
 
   return (
-    <View className="flex-1 items-center">
+    <View className="flex-1 items-center my-4">
       <CheckoutCard />
       <ShippingCard navigation={navigation} />
       <View className="flex-1 w-full justify-end">

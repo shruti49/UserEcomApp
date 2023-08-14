@@ -53,7 +53,7 @@ const Cart = ({navigation}) => {
         </View>
       ) : (
         <>
-          <View className="flex-1 mt-4">
+          <View className="flex-1 m-4">
             <FlatList
               data={cartItemList}
               renderItem={({item}) => renderProductCard(item)}

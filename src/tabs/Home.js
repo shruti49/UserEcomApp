@@ -29,7 +29,6 @@ const Home = () => {
 
   useEffect(() => {
     getProducts();
-    fetchItemsFromWishlist(userData.id);
   }, [isFocused]);
 
   const renderProductCard = item => (
@@ -40,13 +39,13 @@ const Home = () => {
       getProducts={getProducts}
     />
   );
-console.log("Home Page render");
+
   return (
     <View className="flex-1 mx-auto mt-4 w-11/12">
-      {/* <SearchCard
+      <SearchCard
         productList={productList}
         setFilteredProductList={setFilteredProductList}
-      /> */}
+      />
       <FlatList
         data={filteredProductList}
         renderItem={({item}) => renderProductCard(item)}

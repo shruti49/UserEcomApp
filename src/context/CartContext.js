@@ -101,7 +101,7 @@ export const CartProvider = ({children}) => {
     let totalSum = 0;
     itemList.map(item => {
       totalSum =
-        totalSum + updatePrice(item._data.quantity, item._data.itemData.price);
+        totalSum + updatePrice(item._data.quantity, item._data.itemData.productPrice);
     });
     return totalSum;
   };
