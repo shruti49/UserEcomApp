@@ -19,7 +19,7 @@ const BottomTabNavigator = () => {
   const {fetchCartItems} = useContext(CartContext);
 
   useEffect(() => {
-    fetchCartItems(userData.id);
+    //fetchCartItems(userData.id);
   }, [userData,cartLength]);
 
   return (

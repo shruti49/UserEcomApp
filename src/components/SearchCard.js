@@ -28,14 +28,14 @@ const SearchCard = ({productList, setFilteredProductList}) => {
     <View className="flex-row justify-between mb-8">
       <CustomInputText
         placeholder="Type here"
-        style="w-[72%]"
+        style="w-[70%]"
         value={searchText}
         handleChange={handleSearchText}
       />
-      <View className="w-3/12 flex-row justify-between">
+      <View className="w-[30%] flex-row justify-between">
         <TouchableOpacity
           onPress={handleSearch}
-          className="bg-purple-800 justify-center px-2 rounded-md mr-2">
+          className="bg-gray-800 justify-center px-2 rounded-md ml-2">
           <Icon name="search-outline" width={32} height={32} fill={'#ffffff'} />
         </TouchableOpacity>
         <TouchableOpacity

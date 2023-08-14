@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, memo} from 'react';
 import {View, Text, Image} from 'react-native';
 import {Icon} from 'react-native-eva-icons';
 import {useNavigation} from '@react-navigation/native';
@@ -22,8 +22,12 @@ const ProductCard = props => {
     updatePrice,
   } = useContext(CartContext);
 
-  const {removeItemFromWishlist, addNewItemInWishlist} =
-    useContext(WishlistContext);
+  const {
+    removeItemFromWishlist,
+    addNewItemInWishlist,
+    isWishlisted,
+    wishlistingItem,
+  } = useContext(WishlistContext);
 
   const {userData} = useContext(AuthContext);
 
@@ -31,17 +35,17 @@ const ProductCard = props => {
     props;
 
   let productData;
-  if (screenName === 'cart') {
+  if (screenName === 'cart' || screenName === 'wishlist') {
     productData = item._data.itemData;
+    // console.log(productData,screenName);
   } else {
     productData = item._data;
   }
 
   const {quantity} = item._data;
-  const {name, price, description, imageUrl} = productData;
-
+  const {productName, productPrice, productDescription, productImageUrl} =
+    productData;
   const [isVisible, setIsVisible] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(true);
   const [actionType, setActionType] = useState();
 
   const updateFlatList = () => {
@@ -82,18 +86,40 @@ const ProductCard = props => {
             }
           });
       } else {
-        setIsWishlisted(!isWishlisted);
-        if (isWishlisted) {
-          addNewItemInWishlist(item, itemId, customerId);
-        } else {
-          removeItemFromWishlist(itemId);
-        }
+        wishlistingItem(item?._data?.id);
+        firestore()
+          .collection('wishlist')
+          .where('userId', '==', customerId)
+          .get()
+          .then(snapshot => {
+            if (snapshot.docs.length > 0) {
+              snapshot.docs.map(wishlistedItem => {
+                const productId = wishlistedItem?._data?.itemData?.productId;
+                if (
+                  productId === item?._data?.productId ||
+                  productId === item._data?.itemData?.productId
+                ) {
+                  removeItemFromWishlist(
+                    wishlistedItem._data.wishlistId,
+                    customerId,
+                    item,
+                  );
+                } else {
+                  //addNewItemInWishlist(item, itemId, customerId);
+                }
+              });
+            } else {
+              addNewItemInWishlist(item, itemId, customerId);
+            }
+            updateFlatList();
+          })
+          .catch(err => console.log(err));
       }
     } else {
       setIsVisible(true);
     }
   };
-
+  console.log('Product render');
   return (
     <View className="mb-4 bg-white rounded-lg p-2" style={{elevation: 5}}>
       <View
@@ -103,14 +129,17 @@ const ProductCard = props => {
             : 'flex-row justify-between'
         }>
         <View className="flex-row">
-          <Image source={{uri: imageUrl}} className="rounded-sm w-20 h-20" />
+          <Image
+            source={{uri: productImageUrl}}
+            className="rounded-sm w-20 h-20"
+          />
           <View className="flex-col ml-4 justify-between">
             <View>
               <Text className="font-semibold text-lg text-black">
-                {name}
-                {screenName !== 'cart' ? ` - ₹ ${price}` : ''}
+                {productName}
+                {screenName !== 'cart' ? ` - ₹ ${productPrice}` : ''}
               </Text>
-              <Text className="text-black">{description}</Text>
+              <Text className="text-black">{productDescription}</Text>
             </View>
           </View>
         </View>
@@ -133,15 +162,19 @@ const ProductCard = props => {
               <TouchableOpacity
                 onPress={() => checkUserAuthentication(item, 'wishlist')}>
                 <Icon
-                  name={isWishlisted ? 'heart-outline' : 'heart'}
+                  name={
+                    item._data?.isLiked || item._data.itemData?.isLiked
+                      ? 'heart'
+                      : 'heart-outline'
+                  }
                   width={24}
                   height={24}
-                  fill={'rgb(107 33 168)'}
+                  fill="#CE2029"
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkUserAuthentication(item, 'cart')}
-                className="p-2 content-center items-center self-center rounded-lg bg-purple-800">
+                className="p-2 rounded-lg bg-purple-800">
                 <Text className="text-white">Add to Cart</Text>
               </TouchableOpacity>
             </>
@@ -194,4 +227,4 @@ const ProductCard = props => {
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);

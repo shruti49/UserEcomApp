@@ -3,13 +3,13 @@ import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 
 import ProductCard from '../components/ProductCard';
-import TotalPriceCard from '../components/TotalPriceCard';
 
 import {WishlistContext} from '../context/WishlistContext';
 import {AuthContext} from '../context/AuthContext';
 
 const Wishlist = ({navigation}) => {
-  const {fetchItemsFromWishlist, wishlistItems} = useContext(WishlistContext);
+  const {fetchItemsFromWishlist, likedItemsList, wishlistingItem} =
+    useContext(WishlistContext);
 
   const {userData} = useContext(AuthContext);
 
@@ -27,22 +27,19 @@ const Wishlist = ({navigation}) => {
   const renderProductCard = item => (
     <ProductCard
       item={item}
-      //screenName="cart"
+      screenName="wishlist"
       refreshFlatlist={refreshFlatlist}
       setRefreshFlatList={setRefreshFlatList}
     />
   );
-
+  console.log("Wishlist Page render");
   return (
     <>
-      {wishlistItems.length === 0 ? (
+      {likedItemsList.length === 0 ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-black text-2xl">Your bag is empty!</Text>
-          <Text className="text-black text-sm m-2">
-            This feels too light! Go on,add all of your favorites.
-          </Text>
+          <Text className="text-black text-2xl">Wishlist something</Text>
           <TouchableOpacity
-            className="bg-purple-800 rounded-md p-4"
+            className="bg-purple-800 rounded-md p-4 mt-4"
             onPress={() => navigation.navigate('Home')}
             style={{elevation: 2}}>
             <Text className="text-white font-semibold text-xl">
@@ -52,15 +49,14 @@ const Wishlist = ({navigation}) => {
         </View>
       ) : (
         <>
-          <View className="flex-1 mt-4">
+          <View className="flex-1 mx-auto w-11/12 my-4">
             <FlatList
-              data={wishlistItems}
+              data={likedItemsList}
               renderItem={({item}) => renderProductCard(item)}
-              keyExtractor={item => item._data.itemId}
+              keyExtractor={item => item._data.wishlistId}
               extraData={refreshFlatlist}
             />
           </View>
-          <TotalPriceCard navigation={navigation} />
         </>
       )}
     </>

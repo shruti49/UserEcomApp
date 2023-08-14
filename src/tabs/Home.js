@@ -1,11 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard';
 import {useIsFocused} from '@react-navigation/native';
 import SearchCard from '../components/SearchCard';
+import {WishlistContext} from '../context/WishlistContext';
+import {AuthContext} from '../context/AuthContext';
 
 const Home = () => {
+  const {userData} = useContext(AuthContext);
+  const {likedItemsList} = useContext(WishlistContext);
   const [productList, setProductList] = useState([]);
   const [filteredProductList, setFilteredProductList] = useState([]);
   const [refreshFlatlist, setRefreshFlatList] = useState(false);
@@ -25,6 +29,7 @@ const Home = () => {
 
   useEffect(() => {
     getProducts();
+    fetchItemsFromWishlist(userData.id);
   }, [isFocused]);
 
   const renderProductCard = item => (
@@ -35,17 +40,17 @@ const Home = () => {
       getProducts={getProducts}
     />
   );
-
+console.log("Home Page render");
   return (
     <View className="flex-1 mx-auto mt-4 w-11/12">
-      <SearchCard
+      {/* <SearchCard
         productList={productList}
         setFilteredProductList={setFilteredProductList}
-      />
+      /> */}
       <FlatList
         data={filteredProductList}
         renderItem={({item}) => renderProductCard(item)}
-        keyExtractor={item => item._data.id}
+        keyExtractor={item => item._data.productId}
         extraData={refreshFlatlist}
       />
     </View>

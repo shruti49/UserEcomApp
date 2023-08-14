@@ -19,13 +19,13 @@ const AuthenticationModal = props => {
           </Text>
           <CustomButton
             title="Login"
-            style="w-11/12 mb-4 bg-purple-800"
+            style="w-9/12 mb-4 bg-purple-800"
             handlePress={onHandleLogin}
             textColor="text-white"
           />
           <CustomButton
             title="Cancel"
-            style="w-11/12 bg-white"
+            style="w-9/12 bg-white"
             handlePress={onCancel}
             textColor="text-purple-800"
           />

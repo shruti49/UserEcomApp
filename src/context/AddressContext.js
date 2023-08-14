@@ -240,7 +240,6 @@ export const AddressProvider = ({children}) => {
       const value = await AsyncStorage.getItem('address');
       if (value !== null) {
         // We have data!!
-        //console.log(JSON.parse(value));
         setShippingAddress(JSON.parse(value));
       }
     } catch (error) {

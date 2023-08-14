@@ -42,22 +42,29 @@ const Account = ({navigation}) => {
   };
 
   return (
-    <View className="flex-1 items-center m-4">
+    <View className="flex-1 items-center mt-4">
       <View className="border-2 rounded-full p-2">
         <Icon name="person" width={108} height={108} />
       </View>
       <Text className="text-black mt-2 font-bold text-xl">
-        {userData.name ? userData.name : ''}
+        {userData.name ? userData.name : 'Hello User'}
       </Text>
       <Text className="text-black font-bold text-xl">
         {userData.email ? userData.email : ''}
       </Text>
-
-      <FlatList
-        className="my-4"
-        data={itemList}
-        renderItem={({item}) => renderList(item)}
-      />
+      {userData.id ? (
+        <FlatList
+          className="my-4"
+          data={itemList}
+          renderItem={({item}) => renderList(item)}
+        />
+      ) : (
+        <TouchableOpacity
+          className="bg-white mt-4 p-4 w-11/12 rounded-md"
+          onPress={() => navigation.navigate('AboutUs')}>
+          <Text className="text-black font-bold text-lg">About Us</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
