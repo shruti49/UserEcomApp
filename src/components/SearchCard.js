@@ -13,7 +13,7 @@ const SearchCard = ({productList, setFilteredProductList}) => {
   const handleSearch = e => {
     if (searchText.length > 2) {
       const filteredList = productList.filter(searchItem =>
-        searchItem._data.name.toLowerCase().includes(searchText.toLowerCase()),
+        searchItem._data?.productName?.toLowerCase().includes(searchText.toLowerCase()),
       );
       setFilteredProductList(filteredList);
     }

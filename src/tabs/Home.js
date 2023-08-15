@@ -29,7 +29,7 @@ const Home = () => {
 
   useEffect(() => {
     getProducts();
-  }, [isFocused]);
+  }, [isFocused, refreshFlatlist]);
 
   const renderProductCard = item => (
     <ProductCard

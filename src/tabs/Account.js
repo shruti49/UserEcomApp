@@ -15,12 +15,6 @@ const Account = ({navigation}) => {
       name: 'Address',
     },
     {
-      name: 'Profile',
-    },
-    {
-      name: 'About Us',
-    },
-    {
       name: 'Logout',
     },
   ];

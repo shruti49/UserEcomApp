@@ -29,12 +29,14 @@ const ShippingCard = ({navigation}) => {
         <Text className="font-medium text-lg text-black">Deliver to</Text>
         <Text className="text-black font-bold text-lg"> {contactName}</Text>
       </View>
-      <Text className="text-gray-600">{street}</Text>
-      <Text className="text-gray-600">{city}</Text>
-      <Text className=" text-black">
-        {state} - {pincode}
-      </Text>
-      <Text className="text-black">{contactNumber}</Text>
+      <View className="mb-4">
+        <Text className="text-gray-600">{street}</Text>
+        <Text className="text-gray-600">{city}</Text>
+        <Text className=" text-black">
+          {state} - {pincode}
+        </Text>
+        <Text className="text-black">{contactNumber}</Text>
+      </View>
       <CustomButton
         style="w-11/12 bg-white"
         title="Change or Add Address"

@@ -37,7 +37,6 @@ const ProductCard = props => {
   let productData;
   if (screenName === 'cart' || screenName === 'wishlist') {
     productData = item._data.itemData;
-    // console.log(productData,screenName);
   } else {
     productData = item._data;
   }
@@ -51,6 +50,7 @@ const ProductCard = props => {
   const updateFlatList = () => {
     setRefreshFlatList(!refreshFlatlist);
     if (screenName === 'cart') fetchCartItems(userData.id);
+    else if (screenName === 'wishlist') fetchItemsFromWishlist(userData.id);
     else getProducts();
   };
 
@@ -91,27 +91,31 @@ const ProductCard = props => {
           .where('userId', '==', customerId)
           .get()
           .then(snapshot => {
-            //wishlistingItem(item?._data?.productId);
+            wishlistingItem(
+              item?._data?.productId || item._data?.itemData?.productId,
+            );
+            updateFlatList();
             if (snapshot.docs.length > 0) {
-              snapshot.docs.map(wishlistedItem => {
-                const productId = wishlistedItem?._data?.itemData?.productId;
-                if (
-                  productId === item?._data?.productId ||
-                  productId === item._data?.itemData?.productId
-                ) {
-                  removeItemFromWishlist(
-                    wishlistedItem._data.wishlistId,
-                    customerId,
-                    item,
-                  );
-                } else {
-                  //addNewItemInWishlist(item, itemId, customerId);
-                }
-              });
+              const filteredArr = snapshot.docs.filter(
+                wishlistedItem =>
+                  wishlistedItem?._data?.itemData?.productId ===
+                    item?._data?.productId ||
+                  wishlistedItem?._data?.itemData?.productId ===
+                    item._data?.itemData?.productId,
+              );
+
+              if (filteredArr.length > 0) {
+                removeItemFromWishlist(
+                  filteredArr[0]?._data?.wishlistId,
+                  customerId,
+                  item,
+                );
+              } else {
+                addNewItemInWishlist(item, itemId, customerId);
+              }
             } else {
               addNewItemInWishlist(item, itemId, customerId);
             }
-            updateFlatList();
           })
           .catch(err => console.log(err));
       }
@@ -163,7 +167,12 @@ const ProductCard = props => {
                 onPress={() => checkUserAuthentication(item, 'wishlist')}>
                 <Icon
                   name={
-                    item._data?.isLiked || item._data.itemData?.isLiked
+                    item._data?.isLiked ||
+                    item._data.itemData?.isLiked ||
+                    isWishlisted.includes(
+                      item?._data?.productId ||
+                        item?._data?.itemData?.productId,
+                    )
                       ? 'heart'
                       : 'heart-outline'
                   }

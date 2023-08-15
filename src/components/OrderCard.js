@@ -15,20 +15,20 @@ const OrderCard = ({item}) => {
         <View
           className="w-11/12 mx-auto mb-4 bg-white rounded-lg p-2"
           style={{elevation: 5}}
-          key={cartItem.itemData.itemId}>
+          key={cartItem.itemId}>
           <View className="flex-row justify-between">
             <View className="flex-row">
               <Image
-                source={{uri: cartItem.itemData.imageUrl}}
+                source={{uri: cartItem.itemData.productImageUrl}}
                 className="rounded-sm w-20 h-20"
               />
               <View className="flex-col ml-4 justify-between">
                 <View>
                   <Text className="font-semibold text-lg text-black">
-                    {cartItem.itemData.name}
+                    {cartItem.itemData.productName}
                   </Text>
                   <Text className="text-black">
-                    {cartItem.itemData.description}
+                    {cartItem.itemData.productDescription}
                   </Text>
                 </View>
               </View>

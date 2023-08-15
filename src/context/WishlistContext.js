@@ -22,10 +22,6 @@ export const WishlistProvider = ({children}) => {
       .where('userId', '==', customerId)
       .get()
       .then(snapshot => {
-        //if user has added items in wishlist
-        // snapshot.docs.map(item => {
-        //   setIsWishlisted(item?._data?.itemData?.productId);
-        // });
         setLikedItemsList(snapshot.docs);
       })
       .catch(err => console.log(err));
@@ -62,7 +58,7 @@ export const WishlistProvider = ({children}) => {
       .then(() => {
         firestore()
           .collection('products')
-          .doc(item._data.productId || item._data.itemData?.productId)
+          .doc(item?._data?.productId || item?._data?.itemData?.productId)
           .update({
             isLiked: false,
           })
