@@ -17,7 +17,7 @@ const Checkout = ({navigation}) => {
     const cartList = [];
     cartItemList.map(item => {
       cartList.push(item._data);
-      firestore().collection('cart').doc(item._data.itemId).delete();
+      firestore().collection('cart').doc(item._data.cartItemId).delete();
     });
     const orderId = uuid.v4();
     firestore().collection('orders').doc(orderId).set({

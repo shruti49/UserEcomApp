@@ -35,8 +35,8 @@ const AddAddress = ({navigation, route}) => {
     city: '',
     state: '',
     pincode: '',
-    contactName: '',
-    contactNumber: '',
+    contactName: userData.name,
+    contactNumber: userData.phoneNo,
   };
 
   const [isDefault, setIsDefault] = useState(false);
@@ -91,7 +91,7 @@ const AddAddress = ({navigation, route}) => {
       });
       setIsDefault(isDefault);
     } else {
-      clearInputFields();
+      setFormFields(defaultFields);
     }
   }, [address, addressId]);
 
@@ -111,23 +111,26 @@ const AddAddress = ({navigation, route}) => {
       <KeyboardAvoidingView className="flex-1" behavior="">
         <ScrollView className="flex-1">
           <>
-            <Text className="text-black font-bold text-xl">Address</Text>
+            <Text className="text-black font-bold text-xl mb-4">Address</Text>
             <CustomInputText
               placeholder="Street"
               value={street}
               handleChange={val => handleInput(val, 'street')}
               multiline={true}
+              style="mb-4"
             />
             <CustomInputText
               placeholder="City"
               value={city}
               textType="city"
               handleChange={val => handleInput(val, 'city')}
+              style="mb-4"
             />
             <CustomInputText
               placeholder="State"
               value={state}
               handleChange={val => handleInput(val, 'state')}
+              style="mb-4"
             />
             <CustomInputText
               placeholder="Pincode"
@@ -144,7 +147,7 @@ const AddAddress = ({navigation, route}) => {
           </View>
           <View className="mt-4">
             <Text className="text-black font-bold text-xl">Contact</Text>
-            <Text className="text-black">
+            <Text className="text-black mt-2 mb-4">
               Information provided here will be used to contact you for delivery
               updates.
             </Text>
@@ -152,6 +155,7 @@ const AddAddress = ({navigation, route}) => {
               placeholder="Name"
               value={contactName}
               handleChange={val => handleInput(val, 'contactName')}
+              style="mb-4"
             />
             <CustomInputText
               placeholder="Phone Number"

@@ -19,7 +19,7 @@ const Wishlist = ({navigation}) => {
 
   useEffect(() => {
     const customerId = userData.id;
-    if (customerId !== '') {
+    if (customerId) {
       fetchItemsFromWishlist(customerId);
     }
   }, [isFocused]);

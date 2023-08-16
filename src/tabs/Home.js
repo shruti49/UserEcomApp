@@ -8,7 +8,6 @@ import {WishlistContext} from '../context/WishlistContext';
 import {AuthContext} from '../context/AuthContext';
 
 const Home = () => {
-  const {userData} = useContext(AuthContext);
   const {likedItemsList} = useContext(WishlistContext);
   const [productList, setProductList] = useState([]);
   const [filteredProductList, setFilteredProductList] = useState([]);
@@ -29,7 +28,7 @@ const Home = () => {
 
   useEffect(() => {
     getProducts();
-  }, [isFocused, refreshFlatlist]);
+  }, [isFocused, likedItemsList]);
 
   const renderProductCard = item => (
     <ProductCard

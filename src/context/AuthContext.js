@@ -11,6 +11,7 @@ export const AuthProvider = ({children}) => {
     id: '',
     name: '',
     email: '',
+    phoneNo: '',
   });
 
   useEffect(() => {
@@ -35,8 +36,8 @@ export const AuthProvider = ({children}) => {
     await AsyncStorage.setItem('phoneNo', data.phoneNo);
 
     setUserData({
-      id: data.id,
-      name: data.name,
+      id: data.customerId,
+      name: data.customerName,
       email: data.email,
       phoneNo: data.phoneNo,
     });

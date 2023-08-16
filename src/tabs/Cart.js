@@ -57,7 +57,7 @@ const Cart = ({navigation}) => {
             <FlatList
               data={cartItemList}
               renderItem={({item}) => renderProductCard(item)}
-              keyExtractor={item => item._data.itemId}
+              keyExtractor={item => item._data.cartItemId}
               extraData={refreshFlatlist}
             />
           </View>

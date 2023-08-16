@@ -2,25 +2,25 @@ import {useContext, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon} from 'react-native-eva-icons';
 
-import {CartContext} from '../context/CartContext';
-
 import Home from '../tabs/Home';
 import Wishlist from '../tabs/Wishlist';
 import Account from '../tabs/Account';
 import Cart from '../tabs/Cart';
 
+import {CartContext} from '../context/CartContext';
+import {WishlistContext} from '../context/WishlistContext';
 import {AuthContext} from '../context/AuthContext';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const {userData} = useContext(AuthContext);
-  const {cartLength} = useContext(CartContext);
-  const {fetchCartItems} = useContext(CartContext);
+  const {cartLength, fetchCartItems} = useContext(CartContext);
+  const {wishlistLength, fetchItemsFromWishlist} = useContext(WishlistContext);
 
   useEffect(() => {
-    //fetchCartItems(userData.id);
-    console.log(cartLength);
+    fetchCartItems(userData.id);
+    fetchItemsFromWishlist(userData.id);
   }, [userData]);
 
   return (
@@ -63,12 +63,19 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="Wishlist"
         component={Wishlist}
-        options={{title: 'Wishlist'}}
+        options={
+          wishlistLength > 0
+            ? {
+                tabBarBadge: wishlistLength,
+                title: 'My Wishlist',
+              }
+            : {title: 'My Wishlist'}
+        }
       />
       <Tab.Screen
         name="Account"
         component={Account}
-        options={{title: 'Account'}}
+        options={{title: 'My Account'}}
       />
     </Tab.Navigator>
   );

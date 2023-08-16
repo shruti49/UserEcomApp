@@ -35,8 +35,10 @@ const ProductCard = props => {
     props;
 
   let productData;
-  if (screenName === 'cart' || screenName === 'wishlist') {
-    productData = item._data.itemData;
+  if (screenName === 'cart') {
+    productData = item._data.cartItemData;
+  } else if (screenName === 'wishlist') {
+    productData = item._data.wishlistedItemData;
   } else {
     productData = item._data;
   }
@@ -64,22 +66,25 @@ const ProductCard = props => {
       if (type === 'cart') {
         firestore()
           .collection('cart')
-          .where('userId', '==', customerId)
+          .where('addedByUserId', '==', customerId)
           .get()
           .then(snapshot => {
             //if user has added items in cart
             if (snapshot.docs.length > 0) {
-              //looping over all the items added by the user
-              snapshot.docs.map(cartItem => {
-                const productId = cartItem._data.itemData.id;
-                //if that item exists increase the quantity
-                if (productId === item._data.id) {
-                  increaseItemQuantity(cartItem);
-                } else {
-                  //user has not added anything
-                  addNewItemInCart(item, itemId, customerId);
-                }
-              });
+              //filtering the item with same id
+              const filteredArr = snapshot.docs.filter(
+                cartItem =>
+                  cartItem?._data?.cartItemData?.productId ===
+                    item?._data?.productId ||
+                  cartItem?._data?.cartItemData?.productId ===
+                    item?._data?.wishlistedItemData?.productId,
+              );
+
+              if (filteredArr.length > 0) {
+                increaseItemQuantity(filteredArr[0]);
+              } else {
+                addNewItemInCart(item, itemId, customerId);
+              }
             } else {
               //user has not added anything
               addNewItemInCart(item, itemId, customerId);
@@ -88,20 +93,21 @@ const ProductCard = props => {
       } else {
         firestore()
           .collection('wishlist')
-          .where('userId', '==', customerId)
+          .where('wishlistedByUserId', '==', customerId)
           .get()
           .then(snapshot => {
             wishlistingItem(
-              item?._data?.productId || item._data?.itemData?.productId,
+              item?._data?.productId ||
+                item._data?.wishlistedItemData?.productId,
             );
             updateFlatList();
             if (snapshot.docs.length > 0) {
               const filteredArr = snapshot.docs.filter(
                 wishlistedItem =>
-                  wishlistedItem?._data?.itemData?.productId ===
+                  wishlistedItem?._data?.wishlistedItemData?.productId ===
                     item?._data?.productId ||
-                  wishlistedItem?._data?.itemData?.productId ===
-                    item._data?.itemData?.productId,
+                  wishlistedItem?._data?.wishlistedItemData?.productId ===
+                    item._data?.wishlistedItemData?.productId,
               );
 
               if (filteredArr.length > 0) {
@@ -127,9 +133,9 @@ const ProductCard = props => {
   const setIconName = () => {
     if (
       item._data?.isLiked ||
-      item._data.itemData?.isLiked ||
+      item._data.wishlistedItemData?.isLiked ||
       isWishlisted.includes(
-        item?._data?.productId || item?._data?.itemData?.productId,
+        item?._data?.productId || item?._data?.wishlistedItemData?.productId,
       )
     )
       return 'heart';
@@ -137,7 +143,7 @@ const ProductCard = props => {
   };
 
   return (
-    <View className="mb-4 bg-white rounded-lg p-2" style={{elevation: 5}}>
+    <View className="mb-4 bg-white rounded-lg p-2" style={{elevation: 3}}>
       <View
         className={
           screenName === 'cart'

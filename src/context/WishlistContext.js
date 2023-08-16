@@ -6,6 +6,7 @@ export const WishlistContext = createContext();
 export const WishlistProvider = ({children}) => {
   const [likedItemsList, setLikedItemsList] = useState([]);
   const [isWishlisted, setIsWishlisted] = useState([]);
+  const [wishlistLength, setWishlistLength] = useState();
 
   const wishlistingItem = id => {
     if (isWishlisted.includes(id)) {
@@ -19,10 +20,11 @@ export const WishlistProvider = ({children}) => {
   fetchItemsFromWishlist = customerId => {
     firestore()
       .collection('wishlist')
-      .where('userId', '==', customerId)
+      .where('wishlistedByUserId', '==', customerId)
       .get()
       .then(snapshot => {
         setLikedItemsList(snapshot.docs);
+        setWishlistLength(snapshot.docs.length);
       })
       .catch(err => console.log(err));
   };
@@ -33,9 +35,8 @@ export const WishlistProvider = ({children}) => {
       .doc(itemId)
       .set({
         wishlistId: itemId,
-        itemData: {...item._data, isLiked: true},
-        userId: customerId,
-        quantity: 1,
+        wishlistedItemData: {...item._data, isLiked: true},
+        wishlistedByUserId: customerId,
       })
       .then(snapshot => {
         firestore()
@@ -58,7 +59,10 @@ export const WishlistProvider = ({children}) => {
       .then(() => {
         firestore()
           .collection('products')
-          .doc(item?._data?.productId || item?._data?.itemData?.productId)
+          .doc(
+            item?._data?.productId ||
+              item?._data?.wishlistedItemData?.productId,
+          )
           .update({
             isLiked: false,
           })
@@ -78,6 +82,7 @@ export const WishlistProvider = ({children}) => {
         likedItemsList,
         isWishlisted,
         wishlistingItem,
+        wishlistLength
       }}>
       {children}
     </WishlistContext.Provider>

@@ -41,13 +41,13 @@ const Login = ({navigation}) => {
         <Text className="text-2xl font-medium my-6 text-purple-800">Login</Text>
         <CustomInputText
           placeholder="Enter Email"
-          style="w-11/12 mb-4"
+          style="w-11/12 mb-8"
           value={email}
           handleChange={val => handleInput(val, 'email')}
         />
         <CustomInputText
           placeholder="Enter Password"
-          style="w-11/12 mb-4"
+          style="w-11/12 mb-8"
           value={password}
           textType="password"
           handleChange={val => handleInput(val, 'password')}

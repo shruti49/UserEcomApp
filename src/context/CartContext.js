@@ -12,18 +12,16 @@ export const CartProvider = ({children}) => {
   const fetchCartItems = customerId => {
     firestore()
       .collection('cart')
-      .where('userId', '==', customerId)
+      .where('addedByUserId', '==', customerId)
       .get()
       .then(snapshot => {
         //if user has added items in cart
-        // if (snapshot.docs.length > 0) {
         setCartItemList(snapshot.docs);
         let totalItemLength = 0;
         for (let i = 0; i < snapshot.docs.length; i++) {
           totalItemLength = totalItemLength + snapshot.docs[i]._data.quantity;
         }
         setCartLength(totalItemLength);
-        // }
       })
       .catch(err => console.log(err));
   };
@@ -41,9 +39,11 @@ export const CartProvider = ({children}) => {
       .collection('cart')
       .doc(itemId)
       .set({
-        itemId: itemId,
-        itemData: {...item._data},
-        userId: customerId,
+        cartItemId: itemId,
+        cartItemData: item?._data?.wishlistId
+          ? item?._data?.wishlistedItemData
+          : {...item._data},
+        addedByUserId: customerId,
         quantity: 1,
       })
       .then(snapshot => {
@@ -67,10 +67,10 @@ export const CartProvider = ({children}) => {
     if (item._data.quantity > 0 && item._data.quantity < 5) {
       firestore()
         .collection('cart')
-        .doc(item._data.itemId)
+        .doc(item._data.cartItemId)
         .update({quantity: item._data.quantity + 1})
         .then(() => {
-          fetchCartItems(item._data.userId);
+          fetchCartItems(item._data.addedByUserId);
         })
         .catch(err => console.log(err));
     }
@@ -80,10 +80,10 @@ export const CartProvider = ({children}) => {
     if (item._data.quantity > 1 && item._data.quantity <= 5) {
       firestore()
         .collection('cart')
-        .doc(item._data.itemId)
+        .doc(item._data.cartItemId)
         .update({quantity: item._data.quantity - 1})
         .then(() => {
-          fetchCartItems(item._data.userId);
+          fetchCartItems(item._data.addedByUserId);
         })
         .catch(err => console.log(err));
     }
@@ -101,11 +101,11 @@ export const CartProvider = ({children}) => {
     let totalSum = 0;
     itemList.map(item => {
       totalSum =
-        totalSum + updatePrice(item._data.quantity, item._data.itemData.productPrice);
+        totalSum +
+        updatePrice(item._data.quantity, item._data.cartItemData.productPrice);
     });
     return totalSum;
   };
-
 
   return (
     <CartContext.Provider

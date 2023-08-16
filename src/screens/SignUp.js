@@ -70,33 +70,33 @@ const SignUp = ({navigation}) => {
         <KeyboardAvoidingView className="w-11/12" behavior="padding">
           <ScrollView className="pb-56">
             <CustomInputText
-              style="mb-4"
+              style="mb-8"
               placeholder="Enter Name"
               value={displayName}
               handleChange={val => handleFormFields(val, 'displayName')}
             />
             <CustomInputText
-              style="mb-4"
+              style="mb-8"
               placeholder="Enter Email"
               value={email}
               handleChange={val => handleFormFields(val, 'email')}
             />
             <CustomInputText
-              style="mb-4"
+              style="mb-8"
               placeholder="Enter Phone No"
               type="numeric"
               value={phoneNo}
               handleChange={val => handleFormFields(val, 'phoneNo')}
             />
             <CustomInputText
-              style="mb-4"
+              style="mb-8"
               placeholder="Enter Password"
               value={password}
               textType="password"
               handleChange={val => handleFormFields(val, 'password')}
             />
             <CustomInputText
-              style="mb-4"
+              style="mb-8"
               placeholder="Enter Confirm Password"
               value={confirmPassword}
               handleChange={val => handleFormFields(val, 'confirmPassword')}
