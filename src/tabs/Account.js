@@ -22,7 +22,7 @@ const Account = ({navigation}) => {
   const renderList = item => {
     return (
       <TouchableOpacity
-        className="bg-white mt-4 p-4 w-screen rounded-md"
+        className="bg-white mt-4 p-4 w-screen"
         onPress={() => {
           if (item.name === 'Logout') {
             logout(navigation);
@@ -54,7 +54,7 @@ const Account = ({navigation}) => {
         />
       ) : (
         <TouchableOpacity
-          className="bg-white mt-4 p-4 w-11/12 rounded-md"
+          className="bg-white mt-4 p-4 w-screen"
           onPress={() => navigation.navigate('AboutUs')}>
           <Text className="text-black font-bold text-lg">About Us</Text>
         </TouchableOpacity>

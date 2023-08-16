@@ -12,6 +12,7 @@ import Address from '../screens/Address';
 import AddAddress from '../screens/AddAddress';
 import Success from '../screens/Success';
 import Orders from '../screens/Orders';
+import AboutUs from '../screens/AboutUs';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,11 @@ const AppNavigator = () => {
           name="Orders"
           component={Orders}
           options={{headerShown: true, title: 'Your Orders'}}
+        />
+        <Stack.Screen
+          name="AboutUs"
+          component={AboutUs}
+          options={{headerShown: true}}
         />
       </Stack.Navigator>
     </NavigationContainer>

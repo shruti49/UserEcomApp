@@ -124,6 +124,18 @@ const ProductCard = props => {
     }
   };
 
+  const setIconName = () => {
+    if (
+      item._data?.isLiked ||
+      item._data.itemData?.isLiked ||
+      isWishlisted.includes(
+        item?._data?.productId || item?._data?.itemData?.productId,
+      )
+    )
+      return 'heart';
+    else return 'heart-outline';
+  };
+
   return (
     <View className="mb-4 bg-white rounded-lg p-2" style={{elevation: 5}}>
       <View
@@ -166,16 +178,7 @@ const ProductCard = props => {
               <TouchableOpacity
                 onPress={() => checkUserAuthentication(item, 'wishlist')}>
                 <Icon
-                  name={
-                    item._data?.isLiked ||
-                    item._data.itemData?.isLiked ||
-                    isWishlisted.includes(
-                      item?._data?.productId ||
-                        item?._data?.itemData?.productId,
-                    )
-                      ? 'heart'
-                      : 'heart-outline'
-                  }
+                  name={userData.id ? setIconName() : 'heart-outline'}
                   width={24}
                   height={24}
                   fill="#CE2029"

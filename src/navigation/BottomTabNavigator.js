@@ -20,7 +20,8 @@ const BottomTabNavigator = () => {
 
   useEffect(() => {
     //fetchCartItems(userData.id);
-  }, [userData,cartLength]);
+    console.log(cartLength);
+  }, [userData]);
 
   return (
     <Tab.Navigator
