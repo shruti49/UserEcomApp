@@ -30,6 +30,9 @@ const OrderCard = ({item}) => {
                   <Text className="text-black">
                     {cartItem.cartItemData.productDescription}
                   </Text>
+                  <Text className="text-black">
+                   Quantity: {cartItem.cartItemData.productDescription}
+                  </Text>
                 </View>
               </View>
             </View>

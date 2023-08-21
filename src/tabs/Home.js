@@ -8,6 +8,7 @@ import {WishlistContext} from '../context/WishlistContext';
 import {AuthContext} from '../context/AuthContext';
 
 const Home = () => {
+  const {userData} = useContext(AuthContext);
   const {likedItemsList} = useContext(WishlistContext);
   const [productList, setProductList] = useState([]);
   const [filteredProductList, setFilteredProductList] = useState([]);
@@ -21,14 +22,30 @@ const Home = () => {
       .then(snapshot => {
         if (snapshot._docs.length > 0) {
           setProductList(snapshot.docs);
-          setFilteredProductList(snapshot.docs);
         }
       });
   };
 
   useEffect(() => {
     getProducts();
-  }, [isFocused, likedItemsList]);
+    fetchItemsFromWishlist(userData.id);
+  }, [isFocused]);
+
+  useEffect(() => {
+    const mergedArray = [...likedItemsList, ...productList];
+
+    const set = new Set();
+    const filteredArr = mergedArray.filter(item => {
+      const productId =
+        item._data?.wishlistedItemData?.productId || item._data.productId;
+      if (!set.has(productId)) {
+        set.add(productId);
+        return true;
+      }
+      return false;
+    }, set);
+    setFilteredProductList(filteredArr);
+  }, [productList, likedItemsList]);
 
   const renderProductCard = item => (
     <ProductCard
@@ -48,7 +65,7 @@ const Home = () => {
       <FlatList
         data={filteredProductList}
         renderItem={({item}) => renderProductCard(item)}
-        keyExtractor={item => item._data.productId}
+        keyExtractor={item => item?._data?.productId || item?._data?.wishlistedItemData?.productId}
         extraData={refreshFlatlist}
       />
     </View>

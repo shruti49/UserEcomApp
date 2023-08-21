@@ -36,11 +36,11 @@ const ProductCard = props => {
 
   let productData;
   if (screenName === 'cart') {
-    productData = item._data.cartItemData;
+    productData = item._data?.cartItemData;
   } else if (screenName === 'wishlist') {
-    productData = item._data.wishlistedItemData;
+    productData = item._data?.wishlistedItemData;
   } else {
-    productData = item._data;
+    productData = item._data?.wishlistedItemData || item._data;
   }
 
   const {quantity} = item._data;
@@ -132,7 +132,6 @@ const ProductCard = props => {
 
   const setIconName = () => {
     if (
-      item._data?.isLiked ||
       item._data.wishlistedItemData?.isLiked ||
       isWishlisted.includes(
         item?._data?.productId || item?._data?.wishlistedItemData?.productId,
@@ -161,7 +160,11 @@ const ProductCard = props => {
                 {productName}
                 {screenName !== 'cart' ? ` - ₹ ${productPrice}` : ''}
               </Text>
-              <Text className="text-black">{productDescription}</Text>
+              <Text className="text-black">
+                {productDescription.length > 20
+                  ? productDescription.slice(0, 20) + '...'
+                  : productDescription}
+              </Text>
             </View>
           </View>
         </View>
@@ -184,7 +187,11 @@ const ProductCard = props => {
               <TouchableOpacity
                 onPress={() => checkUserAuthentication(item, 'wishlist')}>
                 <Icon
-                  name={userData.id ? setIconName() : 'heart-outline'}
+                  name={
+                    item?._data?.wishlistedByUserId === userData.id
+                      ? setIconName()
+                      : 'heart-outline'
+                  }
                   width={24}
                   height={24}
                   fill="#CE2029"
